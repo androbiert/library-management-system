@@ -25,7 +25,7 @@ def seed_database():
         # Predefined Users
         users = [
             {
-                "name": "Admin User",
+                "name": "admin",
                 "email": "admin@library.com",
                 "password": "admin123",
                 "role": "admin"
@@ -179,7 +179,7 @@ def seed_database():
         
         existing_books = get_all_books()
         
-        if len(existing_books) == 0:
+        if len(existing_books) > 0:
             books_created = 0
             for book in books:
                 add_book(
@@ -204,7 +204,7 @@ def seed_database():
         print("=" * 60)
         print("\nYou can now login with:")
         print("  ADMIN: admin@library.com / admin123")
-        print("  USER:  john@library.com / user123")
+        print("  USER:  andro@library.com / andro123")
         print(f"\nTotal Users in DB: {len(users)}")
         print(f"Total Books in DB: {len(get_all_books())}")
         print("=" * 60)
