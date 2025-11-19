@@ -8,18 +8,18 @@ def test_db_operations():
         print("Connected to database:", db.name)
         
         # Test User Creation
-        email = "test_admin@example.com"
+        email = "admin@library.com"
         if not get_user_by_email(email):
-            create_user("Test Admin", email, "password123", "admin")
-            print("Test Admin created.")
+            create_user("admin", email, "password123", "admin")
+            print("Admin created.")
         else:
-            print("Test Admin already exists.")
+            print("Admin already exists.")
             
         # Test Book Addition
         books = get_all_books()
         if not books:
             add_book("The Great Gatsby", "F. Scott Fitzgerald", "Classic", "A novel about the American Dream.", "", 10)
-            print("Test Book added.")
+            print("Book added.")
         else:
             print(f"Books found: {len(books)}")
 
