@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<div
+    style="text-align: center; padding: 4rem 2rem; margin-bottom: 3rem; background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%); border-radius: 20px;">
+    <div style="font-size: 5rem; margin-bottom: 1.5rem; color: #4F46E5;">
+        <i class="fas fa-book-open"></i>
+    </div>
+    <h1 style="font-size: 3.5rem; margin-bottom: 1rem; color: #1F2937; font-weight: 800;">
+        Welcome to LibraryHub
+    </h1>
+    <p
+        style="font-size: 1.3rem; color: #6B7280; margin-bottom: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+        Discover thousands of books across all genres. Join our community of readers today!
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('login') }}" class="button"
+            style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); font-size: 1.1rem; padding: 1rem 2rem; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{{ url_for('register') }}" class="button"
+            style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); font-size: 1.1rem; padding: 1rem 2rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+            <i class="fas fa-user-plus"></i> Register Now
+        </a>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="stats-grid" style="margin-bottom: 3rem;">
+    <div class="stat-card">
+        <span class="stat-number">{{ total_books }}</span>
+        <span class="stat-label"><i class="fas fa-book"></i> Books Available</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ total_categories }}</span>
+        <span class="stat-label"><i class="fas fa-tags"></i> Categories</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ active_members }}</span>
+        <span class="stat-label"><i class="fas fa-users"></i> Active Members</span>
+    </div>
+</div>
+
+<!-- Featured Books -->
+<h2 style="text-align: center; color: #1F2937; margin-bottom: 2.5rem; font-size: 2.5rem; font-weight: 800;">
+    <i class="fas fa-star" style="color: #F59E0B;"></i> Featured Books
+</h2>
+
+{% if books %}
+<div class="book-list">
+    {% for book in books[:6] %}
+    <div class="book-card"
+        style="background: white; border: 1px solid #E5E7EB; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease;">
+        {% if book.cover_image %}
+        <img src="{{ book.cover_image }}" alt="{{ book.title }}"
+            style="width: 100%; height: 210px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
+        {% else %}
+        <div
+            style="width: 100%; height: 210px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; border-radius: 8px; color: white; font-size: 4rem;">
+            <i class="fas fa-book"></i>
+        </div>
+        {% endif %}
+
+        <span class="category-badge">{{ book.category }}</span>
+        <h4 style="margin: 0.5rem 0;">{{ book.title }}</h4>
+        <p style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem; font-style: italic;">by {{ book.author }}
+        </p>
+
+        <div style="margin-top: auto; width: 100%;">
+            <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem; line-height: 1.5;">
+                {{ book.description[:80] }}{% if book.description|length > 80 %}...{% endif %}
+            </p>
+
+            {% if book.available_copies > 0 %}
+            <span class="status-badge status-returned"><i class="fas fa-check-circle"></i> {{ book.available_copies }}
+                Available</span>
+            {% else %}
+            <span class="status-badge status-late"><i class="fas fa-times-circle"></i> Out of Stock</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div style="text-align: center; margin-top: 3rem;">
+    <a href="{{ url_for('register') }}" class="button"
+        style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); font-size: 1.2rem; padding: 1rem 2.5rem; box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);">
+        <i class="fas fa-rocket"></i> Join Now to Browse All Books
+    </a>
+</div>
+{% else %}
+<div
+    style="text-align: center; padding: 3rem; background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+    <div style="font-size: 4rem; color: #CBD5E1; margin-bottom: 1rem;"><i class="fas fa-book-open"></i></div>
+    <h3 style="color: #6b7280;">No books available yet</h3>
+    <p style="color: #9ca3af;">Please check back later or contact the administrator.</p>
+</div>
+{% endif %}
+
+<!-- How It Works Section -->
+<div
+    style="background: white; border-radius: 20px; padding: 3rem; margin-top: 4rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+    <h2 style="text-align: center; margin-bottom: 3rem; color: #1F2937; font-size: 2.5rem; font-weight: 800;">
+        <i class="fas fa-lightbulb" style="color: #F59E0B;"></i> How It Works
+    </h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem;">
+        <div
+            style="text-align: center; padding: 2rem; border-radius: 12px; background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(79, 70, 229, 0.02) 100%); transition: transform 0.3s;">
+            <div
+                style="width: 80px; height: 80px; background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); margin: 0 auto 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h3 style="color: #4F46E5; margin-bottom: 0.75rem; font-size: 1.5rem;">Register</h3>
+            <p style="color: #6b7280; line-height: 1.6;">Create your free account in seconds</p>
+        </div>
+
+        <div
+            style="text-align: center; padding: 2rem; border-radius: 12px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%); transition: transform 0.3s;">
+            <div
+                style="width: 80px; height: 80px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); margin: 0 auto 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 style="color: #10B981; margin-bottom: 0.75rem; font-size: 1.5rem;">Browse</h3>
+            <p style="color: #6b7280; line-height: 1.6;">Search through our extensive collection</p>
+        </div>
+
+        <div
+            style="text-align: center; padding: 2rem; border-radius: 12px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%); transition: transform 0.3s;">
+            <div
+                style="width: 80px; height: 80px; background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); margin: 0 auto 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);">
+                <i class="fas fa-book-reader"></i>
+            </div>
+            <h3 style="color: #F59E0B; margin-bottom: 0.75rem; font-size: 1.5rem;">Borrow</h3>
+            <p style="color: #6b7280; line-height: 1.6;">Request books and enjoy reading!</p>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div
+    style="text-align: center; padding: 4rem 2rem; margin-top: 3rem; background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); border-radius: 20px;">
+    <h2 style="color: white; margin-bottom: 1rem; font-size: 2.5rem; font-weight: 800;">
+        Ready to Start Reading?
+    </h2>
+    <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 2rem;">
+        Join thousands of readers in our community
+    </p>
+    <a href="{{ url_for('register') }}" class="button"
+        style="background: white; color: #4F46E5; font-size: 1.2rem; padding: 1rem 2.5rem; font-weight: 700; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
+        <i class="fas fa-rocket"></i> Create Free Account
+    </a>
+</div>
+
+<style>
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+
+{% endblock %}

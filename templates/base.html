@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibraryHub - Premium Library Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
+</head>
+
+<body>
+    <!-- Professional Navigation Bar with Blur Effect -->
+    <header
+        style="background: rgba(255, 255, 255, 0.185); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid rgba(229, 231, 235, 0.6);">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+            <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+                <!-- Logo/Brand -->
+                <a href="/"
+                    style="text-decoration: none; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease;">
+                    <div
+                        style="background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); padding: 0.75rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);">
+                        <i class="fas fa-book-open" style="font-size: 1.5rem; color: white;"></i>
+                    </div>
+                    <div>
+                        <span
+                            style="color: #1F2937; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; display: block;">LibraryHub</span>
+                        <span
+                            style="color: #6B7280; font-size: 0.75rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Library
+                            Management</span>
+                    </div>
+                </a>
+
+                <!-- Navigation Links -->
+                <ul style="display: flex; gap: 0.5rem; list-style: none; align-items: center; margin: 0; padding: 0;">
+                    <li><a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+
+                    {% if g.user %}
+                    {% if g.user['role'] == 'admin' %}
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="nav-link"><i class="fas fa-chart-line"></i>
+                            Dashboard</a></li>
+                    <li><a href="{{ url_for('manage_books') }}" class="nav-link"><i class="fas fa-book"></i> Books</a>
+                    </li>
+                    <li><a href="{{ url_for('manage_users') }}" class="nav-link"><i class="fas fa-users"></i> Users</a>
+                    </li>
+                    <li><a href="{{ url_for('manage_loans') }}" class="nav-link"><i class="fas fa-book-reader"></i>
+                            Loans</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('user_dashboard') }}" class="nav-link"><i class="fas fa-search"></i>
+                            Browse</a></li>
+                    <li><a href="{{ url_for('my_loans') }}" class="nav-link"><i class="fas fa-bookmark"></i> My
+                            Library</a></li>
+                    {% endif %}
+
+                    <!-- User Profile -->
+                    <li style="margin-left: 1rem; padding-left: 1rem; border-left: 2px solid #E5E7EB;">
+                        <div
+                            style="display: flex; align-items: center; gap: 0.5rem; background: #F3F4F6; padding: 0.6rem 1.2rem; border-radius: 10px; border: 1px solid #E5E7EB;">
+                            <i class="fas fa-user-circle" style="font-size: 1.2rem; color: #4F46E5;"></i>
+                            <span style="color: #1F2937; font-weight: 600;">{{ g.user['username'] }}</span>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('logout') }}" class="nav-link"
+                            style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white;">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                    {% else %}
+                    <li style="margin-left: 1rem;">
+                        <a href="{{ url_for('login') }}" class="nav-link"
+                            style="background: #F3F4F6; border: 1px solid #E5E7EB;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('register') }}" class="nav-link"
+                            style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); color: white;">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="min-height: calc(100vh - 200px);">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div style="max-width: 1200px; margin: 1.5rem auto; padding: 0 2rem;">
+            {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}" style="animation: slideIn 0.3s ease-out;">
+                {% if category == 'success' %}
+                <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 0.75rem;"></i>
+                {% else %}
+                <i class="fas fa-exclamation-circle" style="font-size: 1.5rem; margin-right: 0.75rem;"></i>
+                {% endif %}
+                <span>{{ message }}</span>
+                <button onclick="this.parentElement.remove()"
+                    style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.2rem; margin-left: auto; opacity: 0.7; transition: opacity 0.2s;"><i
+                        class="fas fa-times"></i></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Page Content -->
+        {% block content %}
+        <div style="max-width: 1200px; margin: 3rem auto; padding: 0 2rem; text-align: center;">
+            <h1 style="color: #1F2937; font-size: 3rem; margin-bottom: 1rem;">
+                <i class="fas fa-book-open" style="color: #4F46E5;"></i> Welcome to LibraryHub
+            </h1>
+            <p style="color: #6B7280; font-size: 1.2rem;">Your gateway to endless knowledge</p>
+        </div>
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: #1F2937; border-top: 2px solid #374151; margin-top: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 2rem; text-align: center;">
+            <p style="color: #9CA3AF; margin-bottom: 0.5rem;">
+                <i class="fas fa-book-open" style="color: #4F46E5;"></i> LibraryHub - Your Digital Library Management
+                System
+            </p>
+            <p style="color: #6B7280; font-size: 0.9rem;">
+              Dev By ANDRO | <i class="far fa-copyright"></i> 2025 All rights reserved
+            </p>
+        </div>
+    </footer>
+
+    <style>
+        /* Navigation Link Styles */
+        .nav-link {
+            color: #1F2937;
+            text-decoration: none;
+            padding: 0.7rem 1.3rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            background: #4F46E5;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+        }
+
+        /* Flash Messages */
+        .flash-message {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+
+        .flash-success {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            color: #065F46;
+            border: 1px solid #6EE7B7;
+        }
+
+        .flash-error {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            color: #991B1B;
+            border: 1px solid #FCA5A5;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            header nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</body>
+
+</html>

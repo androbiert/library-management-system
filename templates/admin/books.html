@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="color: #1F2937; font-size: 2rem; text-align: center; margin-bottom: 1.5rem; font-weight: 800;">
+    <i class="fas fa-book"></i> Books Management
+</h2>
+
+<!-- Books Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <span class="stat-number">{{ books|length }}</span>
+        <span class="stat-label">Total Books</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ books|selectattr('available_copies', 'gt', 0)|list|length }}</span>
+        <span class="stat-label">In Stock</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ books|selectattr('available_copies', 'eq', 0)|list|length }}</span>
+        <span class="stat-label">Out of Stock</span>
+    </div>
+</div>
+
+<!-- Add Book Button -->
+<div class="flex-between">
+    <h3><i class="fas fa-warehouse"></i> Book Inventory</h3>
+    <a href="{{ url_for('add_book_route') }}" class="button"><i class="fas fa-plus"></i> Add New Book</a>
+</div>
+
+<!-- Books Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Cover</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>
+                    {% if book.cover_image %}
+                    <img src="{{ book.cover_image }}" alt="{{ book.title }}"
+                        style="width: 40px; height: 60px; object-fit: cover; border-radius: 4px;">
+                    {% else %}
+                    <div
+                        style="width: 40px; height: 60px; background: var(--primary-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    {% endif %}
+                </td>
+                <td><strong>{{ book.title }}</strong></td>
+                <td>{{ book.author }}</td>
+                <td><span class="category-badge">{{ book.category }}</span></td>
+                <td>
+                    <span style="font-weight: 600;">{{ book.available_copies }}</span> / {{ book.total_copies }}
+                    {% if book.available_copies == 0 %}
+                    <span class="status-badge status-late" style="margin-left: 0.5rem;">Out</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_book_route', book_id=book._id) }}" class="button btn-sm"
+                        style="background-color: #6b7280;"><i class="fas fa-edit"></i> Edit</a>
+                    <a href="{{ url_for('delete_book_route', book_id=book._id) }}"
+                        onclick="return confirm('Delete this book? This cannot be undone.')"
+                        class="button btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if not books %}
+<div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; margin-top: 2rem;">
+    <div style="font-size: 4rem; color: #CBD5E1; margin-bottom: 1rem;"><i class="fas fa-book-open"></i></div>
+    <h3 style="color: #6b7280;">No books yet</h3>
+    <p style="color: #9ca3af; margin-bottom: 1rem;">Start by adding your first book to the library.</p>
+    <a href="{{ url_for('add_book_route') }}" class="button"><i class="fas fa-plus"></i> Add First Book</a>
+</div>
+{% endif %}
+
+{% endblock %}

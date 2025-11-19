@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="color: #1F2937; font-size: 2rem; text-align: center; margin-bottom: 1.5rem; font-weight: 800;">
+    <i class="fas fa-users"></i> Users Management
+</h2>
+
+<!-- User Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <span class="stat-number">{{ users|length }}</span>
+        <span class="stat-label">Total Users</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ users|selectattr('role', 'eq', 'user')|list|length }}</span>
+        <span class="stat-label">Members</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ users|selectattr('role', 'eq', 'admin')|list|length }}</span>
+        <span class="stat-label">Admins</span>
+    </div>
+</div>
+
+<!-- Add User Button -->
+<div class="flex-between">
+    <h3><i class="fas fa-user-friends"></i> All Users</h3>
+    <a href="{{ url_for('add_user_route') }}" class="button"><i class="fas fa-user-plus"></i> Add New User</a>
+</div>
+
+<!-- Users Table -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>
+                    <strong>{{ user.username }}</strong>
+                    {% if user._id == g.user._id %}
+                    <span class="status-badge status-returned" style="margin-left: 0.5rem;">You</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% if user.role == 'admin' %}
+                    <span class="status-badge" style="background: #fef3c7; color: #d97706;"><i class="fas fa-crown"></i>
+                        Admin</span>
+                    {% else %}
+                    <span class="status-badge" style="background: #dbeafe; color: #1e40af;"><i class="fas fa-user"></i>
+                        User</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if not users %}
+<div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; margin-top: 2rem;">
+    <div style="font-size: 4rem; color: #CBD5E1; margin-bottom: 1rem;"><i class="fas fa-users"></i></div>
+    <h3 style="color: #6b7280;">No users yet</h3>
+    <p style="color: #9ca3af; margin-bottom: 1rem;">Add your first user to get started.</p>
+    <a href="{{ url_for('add_user_route') }}" class="button"><i class="fas fa-user-plus"></i> Add First User</a>
+</div>
+{% endif %}
+
+{% endblock %}

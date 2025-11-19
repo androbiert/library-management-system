@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="color: #1F2937; font-size: 2rem; text-align: center; margin-bottom: 1.5rem; font-weight: 800;">
+    <i class="fas fa-book-reader"></i> Loans Management
+</h2>
+
+<!-- Loan Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 2rem;">
+    <div class="stat-card">
+        <span class="stat-number">{{ loans|length }}</span>
+        <span class="stat-label">Total Loans</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ loans|selectattr('status', 'in', ['Borrowed', 'Late'])|list|length }}</span>
+        <span class="stat-label">Active</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ loans|selectattr('status', 'eq', 'Returned')|list|length }}</span>
+        <span class="stat-label">Returned</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ late_loans|length if late_loans else 0 }}</span>
+        <span class="stat-label"><i class="fas fa-exclamation-triangle" style="color: #EF4444;"></i> Late</span>
+    </div>
+</div>
+
+<!-- Assign Loan Form -->
+<div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+    <h3><i class="fas fa-plus-circle"></i> Assign New Loan</h3>
+    <form action="{{ url_for('assign_loan_route') }}" method="post"
+        style="grid-template-columns: 1fr 1fr 1fr auto; max-width: 100%; display: grid; gap: 1rem; align-items: flex-end;">
+        <div>
+            <label><i class="fas fa-user"></i> Select User</label>
+            <select name="user_id" required>
+                <option value="">-- Choose User --</option>
+                {% for user in users %}
+                <option value="{{ user._id }}">{{ user.username }} ({{ user.email }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label><i class="fas fa-book"></i> Select Book</label>
+            <select name="book_id" required>
+                <option value="">-- Choose Book --</option>
+                {% for book in books %}
+                <option value="{{ book._id }}">{{ book.title }} ({{ book.available_copies }} avail)</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label><i class="fas fa-calendar-alt"></i> Deadline</label>
+            <input type="date" name="deadline" required>
+        </div>
+
+        <button type="submit" style="margin-bottom: 0;"><i class="fas fa-check"></i> Assign</button>
+    </form>
+</div>
+
+<!-- Active Loans -->
+<h3><i class="fas fa-list"></i> All Loans</h3>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Book</th>
+                <th>Borrowed</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loan in loans %}
+            <tr>
+                <td>{{ loan.user_details.username }}</td>
+                <td><strong>{{ loan.book_details.title }}</strong></td>
+                <td>{{ loan.borrow_date.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    {{ loan.deadline.strftime('%Y-%m-%d') }}
+                    {% if loan.deadline < now() and loan.status in ['Borrowed', 'Late' ] %} <span
+                        class="status-badge status-late" style="margin-left: 0.5rem;">Overdue</span>
+                        {% endif %}
+                </td>
+                <td>
+                    <span class="status-badge status-{{ loan.status.lower() }}">{{ loan.status }}</span>
+                </td>
+                <td>
+                    {% if loan.status == 'Borrowed' or loan.status == 'Late' %}
+                    <a href="{{ url_for('return_loan_route', loan_id=loan._id) }}" class="button btn-sm"
+                        style="background-color: var(--secondary-color);"><i class="fas fa-check-circle"></i> Mark
+                        Returned</a>
+                    {% else %}
+                    <span style="color: #9ca3af; font-size: 0.875rem;">Completed</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if not loans %}
+<div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; margin-top: 2rem;">
+    <div style="font-size: 4rem; color: #CBD5E1; margin-bottom: 1rem;"><i class="fas fa-book-reader"></i></div>
+    <h3 style="color: #6b7280;">No loans yet</h3>
+    <p style="color: #9ca3af;">Assign the first loan using the form above.</p>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 2rem auto; padding: 0 1.5rem;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <div
+            style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);">
+            <i class="fas {% if book %}fa-edit{% else %}fa-book-medical{% endif %}"
+                style="font-size: 2.5rem; color: white;"></i>
+        </div>
+        <h2 style="color: #1F2937; font-size: 2rem; margin-bottom: 0.5rem; font-weight: 800;">
+            {% if book %}
+            <i class="fas fa-edit"></i> Edit Book
+            {% else %}
+            <i class="fas fa-book-medical"></i> Add New Book
+            {% endif %}
+        </h2>
+        <p style="color: #6B7280; font-size: 1rem;">
+            {% if book %}Update book information in the library catalog{% else %}Add a new book to the library
+            collection{% endif %}
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div style="background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+        <form method="post">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- Title Field -->
+                <div style="grid-column: 1 / -1;">
+                    <label for="title"
+                        style="display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                        <i class="fas fa-heading" style="color: #4F46E5; margin-right: 0.5rem;"></i>Book Title
+                    </label>
+                    <input type="text" name="title" id="title" value="{{ book.title if book else '' }}" required
+                        placeholder="Enter book title"
+                        style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 1rem; transition: all 0.3s;">
+                </div>
+
+                <!-- Author Field -->
+                <div>
+                    <label for="author"
+                        style="display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                        <i class="fas fa-pen-fancy" style="color: #4F46E5; margin-right: 0.5rem;"></i>Author
+                    </label>
+                    <input type="text" name="author" id="author" value="{{ book.author if book else '' }}" required
+                        placeholder="Author name"
+                        style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 1rem; transition: all 0.3s;">
+                </div>
+
+                <!-- Category Field -->
+                <div>
+                    <label for="category"
+                        style="display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                        <i class="fas fa-tag" style="color: #4F46E5; margin-right: 0.5rem;"></i>Category
+                    </label>
+                    <input type="text" name="category" id="category" value="{{ book.category if book else '' }}"
+                        required placeholder="e.g., Fiction, Science"
+                        style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 1rem; transition: all 0.3s;">
+                </div>
+            </div>
+
+            <!-- Description Field -->
+            <div style="margin-bottom: 1.5rem;">
+                <label for="description"
+                    style="display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                    <i class="fas fa-align-left" style="color: #4F46E5; margin-right: 0.5rem;"></i>Description
+                </label>
+                <textarea name="description" id="description" rows="4"
+                    placeholder="Enter a brief description of the book..."
+                    style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 1rem; transition: all 0.3s; resize: vertical; font-family: inherit;">{{ book.description if book else '' }}</textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- Cover Image URL -->
+                <div>
+                    <label for="cover_image"
+                        style="display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                        <i class="fas fa-image" style="color: #4F46E5; margin-right: 0.5rem;"></i>Cover Image URL
+                    </label>
+                    <input type="text" name="cover_image" id="cover_image"
+                        value="{{ book.cover_image if book else '' }}"
+                        placeholder="https://example.com/cover.jpg (optional)"
+                        style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 1rem; transition: all 0.3s;">
+                    <small style="color: #6B7280; font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Optional: Add URL to book cover image
+                    </small>
+                </div>
+
+                <!-- Total Copies -->
+                <div>
+                    <label for="total_copies"
+                        style="display: block; color: #374151; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem;">
+                        <i class="fas fa-copy" style="color: #4F46E5; margin-right: 0.5rem;"></i>Total Copies
+                    </label>
+                    <input type="number" name="total_copies" id="total_copies"
+                        value="{{ book.total_copies if book else 1 }}" min="1" required
+                        style="width: 100%; padding: 0.875rem 1rem; border: 2px solid #E5E7EB; border-radius: 10px; font-size: 1rem; transition: all 0.3s;">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 1rem; justify-content: space-between;">
+                <a href="{{ url_for('manage_books') }}" class="button"
+                    style="flex: 1; background: #6B7280; text-align: center; text-decoration: none;">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="button"
+                    style="flex: 1; background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); border: none; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);">
+                    <i class="fas fa-save"></i> {% if book %}Update Book{% else %}Add Book{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #4F46E5 !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+    }
+
+    button[type="submit"]:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4) !important;
+    }
+</style>
+{% endblock %}

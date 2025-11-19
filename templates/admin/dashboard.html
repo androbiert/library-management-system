@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 2rem;">
+    <h2 style="color: #1F2937; font-size: 2.5rem; font-weight: 800;">
+        <i class="fas fa-chart-line" style="color: #4F46E5;"></i> Admin Dashboard
+    </h2>
+    <p style="color: #6B7280; font-size: 1.1rem;">Welcome, <strong>{{ g.user['username'] }}</strong></p>
+</div>
+
+<!-- Enhanced Stats Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-number">{{ stats.total_books }}</span>
+        <span class="stat-label"><i class="fas fa-book"></i> Total Books</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ stats.total_users }}</span>
+        <span class="stat-label"><i class="fas fa-users"></i> Total Users</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ stats.active_loans }}</span>
+        <span class="stat-label"><i class="fas fa-book-reader"></i> Active Loans</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-number">{{ stats.late_returns }}</span>
+        <span class="stat-label"><i class="fas fa-exclamation-triangle" style="color: #EF4444;"></i> Late Returns</span>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<h3 style="color: #1F2937; margin-top: 3rem;"><i class="fas fa-chart-pie"></i> Analytics & Insights</h3>
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+    <div class="stat-card" style="text-align: center;">
+        <canvas id="categoryChart"></canvas>
+    </div>
+    <div class="stat-card" style="text-align: center;">
+        <canvas id="statusChart"></canvas>
+    </div>
+</div>
+<div class="stat-card" style="margin-bottom: 2rem;">
+    <canvas id="monthlyChart"></canvas>
+</div>
+
+<!-- Quick Actions -->
+<h3 style="color: #1F2937;"><i class="fas fa-bolt"></i> Quick Actions</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+    <a href="{{ url_for('add_book_route') }}" class="stat-card"
+        style="text-decoration: none; text-align: center; transition: transform 0.2s;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fas fa-book-medical" style="color: #4F46E5;"></i>
+        </div>
+        <h4 style="color: #1F2937;">Add New Book</h4>
+        <p style="color: #6b7280; font-size: 0.9rem;">Add books to inventory</p>
+    </a>
+
+    <a href="{{ url_for('add_user_route') }}" class="stat-card"
+        style="text-decoration: none; text-align: center; transition: transform 0.2s;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fas fa-user-plus" style="color: #10B981;"></i>
+        </div>
+        <h4 style="color: #1F2937;">Add New User</h4>
+        <p style="color: #6b7280; font-size: 0.9rem;">Register new members</p>
+    </a>
+
+    <a href="{{ url_for('manage_loans') }}" class="stat-card"
+        style="text-decoration: none; text-align: center; transition: transform 0.2s;">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fas fa-tasks" style="color: #F59E0B;"></i></div>
+        <h4 style="color: #1F2937;">Manage Loans</h4>
+        <p style="color: #6b7280; font-size: 0.9rem;">Handle loan requests</p>
+    </a>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+<style>
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}
