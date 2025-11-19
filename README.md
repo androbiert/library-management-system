@@ -16,7 +16,7 @@ A complete Library Management System built with Flask and MongoDB (NoSQL databas
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/androbiert/library-management-system.git
 cd library_system
 ```
 
