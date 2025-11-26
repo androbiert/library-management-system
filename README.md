@@ -1,4 +1,4 @@
-# Library Management System 📚
+# Ktabna - Library Management System 📚
 
 A complete Library Management System built with Flask and MongoDB (NoSQL database).
 
