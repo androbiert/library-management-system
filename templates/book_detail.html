@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+    <!-- Back Button -->
+    <a href="javascript:history.back()" class="button"
+        style="margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; background: #6B7280;">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+
+    <!-- Book Header -->
+    <div
+        style="display: grid; grid-template-columns: 300px 1fr; gap: 3rem; margin-bottom: 3rem; background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+        <!-- Book Cover -->
+        <div>
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image }}" alt="{{ book.title }}"
+                style="width: 100%; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.2);">
+            {% else %}
+            <div
+                style="width: 100%; height: 400px; background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); display: flex; align-items: center; justify-content: center; border-radius: 12px; color: white; font-size: 5rem;">
+                <i class="fas fa-book"></i>
+            </div>
+            {% endif %}
+
+            <!-- Availability Badge -->
+            <div style="margin-top: 1.5rem;">
+                {% if book.available_copies > 0 %}
+                <div
+                    style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 800;">{{ book.available_copies }}</div>
+                    <div style="font-size: 0.9rem; opacity: 0.9;">Exemplaires disponibles</div>
+                </div>
+                {% else %}
+                <div
+                    style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; padding: 1rem; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 1.2rem; font-weight: 700;">Emprunté</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9;">Non disponible</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Book Info -->
+        <div>
+            <span class="category-badge" style="font-size: 0.9rem;">{{ book.category }}</span>
+            <h1 style="font-size: 2.5rem; margin: 0.75rem 0; color: #1F2937; font-weight: 900;">{{ book.title }}</h1>
+            <p style="font-size: 1.3rem; color: #6B7280; margin-bottom: 1.5rem; font-style: italic;">par {{ book.author
+                }}</p>
+
+            <!-- Quick Info -->
+            <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div>
+                    <div style="color: #9CA3AF; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Catégorie</div>
+                    <div style="color: #1F2937; font-weight: 600; font-size: 1.1rem;">{{ book.category }}</div>
+                </div>
+                <div>
+                    <div style="color: #9CA3AF; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Total Copies</div>
+                    <div style="color: #1F2937; font-weight: 600; font-size: 1.1rem;">{{ book.total_copies }}</div>
+                </div>
+            </div>
+
+            <!-- Original Description -->
+            <div
+                style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%); padding: 1.5rem; border-radius: 12px; border-left: 4px solid #6366F1; margin-bottom: 2rem;">
+                <h3 style="color: #6366F1; margin-bottom: 0.75rem; font-size: 1.1rem;"><i
+                        class="fas fa-info-circle"></i> Description</h3>
+                <p style="color: #4B5563; line-height: 1.7; margin: 0;">{{ book.description }}</p>
+            </div>
+
+            <!-- Borrow Button -->
+            {% if book.available_copies > 0 and g.user and g.user.role == 'user' %}
+            <form action="{{ url_for('borrow_book_route', book_id=book._id) }}" method="post">
+                <button type="submit" class="button"
+                    style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); font-size: 1.2rem; padding: 1.25rem 3rem; width: 100%; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);">
+                    <i class="fas fa-book-reader"></i> Emprunter ce livre
+                </button>
+            </form>
+            {% elif not g.user %}
+            <a href="{{ url_for('login') }}" class="button"
+                style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); font-size: 1.2rem; padding: 1.25rem 3rem; width: 100%; text-align: center; text-decoration: none; display: block;">
+                <i class="fas fa-sign-in-alt"></i> Connectez-vous pour emprunter
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- AI-Generated Content -->
+    <div id="ai-content">
+        <div class="loading-spinner" style="text-align: center; padding: 4rem;">
+            <div
+                style="display: inline-block; width: 60px; height: 60px; border: 5px solid #E5E7EB; border-top-color: #6366F1; border-radius: 50%; animation: spin 1s linear infinite;">
+            </div>
+            <p style="color: #6B7280; margin-top: 1rem; font-size: 1.1rem;">L'IA génère une recommandation
+                personnalisée...</p>
+        </div>
+    </div>
+</div>
+
+<!-- AI Content Template (to be filled by JavaScript) -->
+<template id="ai-content-template">
+    <!-- Detailed AI Description -->
+    <div
+        style="background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 2rem;">
+        <h2 style="color: #1F2937; margin-bottom: 1.5rem; font-size: 2rem; font-weight: 800;">
+            <i class="fas fa-magic" style="color: #6366F1;"></i> Découvrez ce livre
+        </h2>
+        <div id="ai-description" style="color: #4B5563; line-height: 1.8; font-size: 1.05rem;"></div>
+    </div>
+
+    <!-- Interesting Highlights -->
+    <div
+        style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(244, 114, 182, 0.05) 100%); padding: 2.5rem; border-radius: 20px; margin-bottom: 2rem; border: 2px solid rgba(236, 72, 153, 0.1);">
+        <h2 style="color: #EC4899; margin-bottom: 1.5rem; font-size: 1.8rem; font-weight: 800;">
+            <i class="fas fa-star"></i> Points Intéressants
+        </h2>
+        <ul id="ai-highlights" style="list-style: none; padding: 0;"></ul>
+    </div>
+
+    <!-- Why Read This Book -->
+    <div
+        style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(34, 211, 238, 0.05) 100%); padding: 2.5rem; border-radius: 20px; margin-bottom: 2rem; border: 2px solid rgba(6, 182, 212, 0.1);">
+        <h2 style="color: #06B6D4; margin-bottom: 1.5rem; font-size: 1.8rem; font-weight: 800;">
+            <i class="fas fa-lightbulb"></i> Pourquoi lire ce livre?
+        </h2>
+        <ul id="ai-reasons" style="list-style: none; padding: 0;"></ul>
+    </div>
+
+    <!-- AI Summary Quote -->
+    <div
+        style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); padding: 2.5rem; border-radius: 20px; text-align: center; color: white; box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);">
+        <i class="fas fa-quote-left" style="font-size: 2rem; opacity: 0.5; margin-bottom: 1rem;"></i>
+        <p id="ai-summary"
+            style="font-size: 1.4rem; font-weight: 600; font-style: italic; margin: 0; line-height: 1.6;"></p>
+    </div>
+</template>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch AI-generated recommendation
+        fetch('/api/book/{{ book._id }}/ai-recommendation')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success || data.description) {
+                    const template = document.getElementById('ai-content-template');
+                    const clone = template.content.cloneNode(true);
+
+                    // Fill in the content
+                    clone.getElementById('ai-description').innerHTML = data.description.replace(/\n/g, '<br><br>');
+
+                    // Add highlights
+                    const highlightsList = clone.getElementById('ai-highlights');
+                    data.highlights.forEach(highlight => {
+                        const li = document.createElement('li');
+                        li.style.cssText = 'padding: 1rem; margin-bottom: 0.75rem; background: white; border-radius: 10px; border-left: 4px solid #EC4899; box-shadow: 0 2px 10px rgba(0,0,0,0.05);';
+                        li.innerHTML = `<i class="fas fa-check-circle" style="color: #EC4899; margin-right: 0.75rem;"></i>${highlight}`;
+                        highlightsList.appendChild(li);
+                    });
+
+                    // Add reasons
+                    const reasonsList = clone.getElementById('ai-reasons');
+                    data.reasons.forEach(reason => {
+                        const li = document.createElement('li');
+                        li.style.cssText = 'padding: 1rem; margin-bottom: 0.75rem; background: white; border-radius: 10px; border-left: 4px solid #06B6D4; box-shadow: 0 2px 10px rgba(0,0,0,0.05);';
+                        li.innerHTML = `<i class="fas fa-arrow-right" style="color: #06B6D4; margin-right: 0.75rem;"></i>${reason}`;
+                        reasonsList.appendChild(li);
+                    });
+
+                    // Add summary
+                    clone.getElementById('ai-summary').textContent = data.summary;
+
+                    // Replace loading spinner with actual content
+                    document.getElementById('ai-content').innerHTML = '';
+                    document.getElementById('ai-content').appendChild(clone);
+                } else {
+                    // Error state
+                    document.getElementById('ai-content').innerHTML = `
+                    <div style="background: #FEE2E2; padding: 2rem; border-radius: 12px; text-align: center; color: #DC2626;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>Impossible de charger la recommandation IA pour le moment.</p>
+                    </div>
+                `;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading AI recommendation:', error);
+                document.getElementById('ai-content').innerHTML = `
+                <div style="background: #FEE2E2; padding: 2rem; border-radius: 12px; text-align: center; color: #DC2626;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>Erreur lors du chargement de la recommandation.</p>
+                </div>
+            `;
+            });
+    });
+</script>
+
+<style>
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+{% endblock %}

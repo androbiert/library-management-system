@@ -90,7 +90,7 @@
                 </td>
                 <td>
                     {% if loan.status == 'Borrowed' or loan.status == 'Late' %}
-                    <a href="{{ url_for('return_loan_route', loan_id=loan._id) }}" class="button btn-sm"
+                    <a href="{{ url_for('return_loan_route', loan_id=loan.loan_id) }}" class="button btn-sm"
                         style="background-color: var(--secondary-color);"><i class="fas fa-check-circle"></i> Mark
                         Returned</a>
                     {% else %}

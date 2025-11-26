@@ -56,6 +56,9 @@ def seed_database():
             }
         ]
         
+        # Note: Users will have empty loans array initialized in create_user function
+
+        
  
         books = [
             {

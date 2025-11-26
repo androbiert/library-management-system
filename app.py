@@ -46,7 +46,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        role = request.form.get('role', 'user') # Allow admin creation for demo
+        role = 'user'  # Always create new registrations as regular users (admins must be created by existing admins)
         
         if get_user_by_email(email):
             flash('Email already registered', 'error')
@@ -74,6 +74,9 @@ def login():
                 user = db.users.find_one({'username': username_or_email})
         
         if user and check_password_hash(user['password'], password):
+            # Award badges on login
+            award_badges(user['_id'])
+            
             session.clear()
             session['user_id'] = str(user['_id'])
             session['role'] = user['role']
@@ -289,23 +292,18 @@ def user_dashboard():
         books = get_all_books()
     
     categories = get_all_categories()
+    badge_count = len(get_user_badges(session['user_id']))
+    
     return render_template('user/dashboard.html', books=books, categories=categories, 
-                         current_category=category, search_query=search_query)
+                         current_category=category, search_query=search_query, badge_count=badge_count)
 
 @app.route('/borrow/<book_id>', methods=('POST',))
 @login_required
 def borrow_book_route(book_id):
     from datetime import timedelta
     
-    # Check if user already has an active borrowed book
-    from bson.objectid import ObjectId
-    db = get_db()
-    active_loan = db.loans.find_one({
-        'user_id': ObjectId(session['user_id']),
-        'status': {'$in': ['Borrowed', 'Late']}
-    })
-    
-    if active_loan:
+    # Check if user already has an active borrowed book (using new embedded approach)
+    if check_user_has_active_loan(session['user_id']):
         flash('You already have an active book. Please return it before borrowing another one.', 'error')
         return redirect(url_for('user_dashboard'))
     
@@ -314,6 +312,14 @@ def borrow_book_route(book_id):
     
     success, msg = create_loan(session['user_id'], book_id, deadline)
     if success:
+        # Increment books_read and award badges
+        db = get_db()
+        db.users.update_one(
+            {'_id': ObjectId(session['user_id'])},
+            {'$inc': {'books_read': 1}}
+        )
+        award_badges(session['user_id'])
+        
         flash('Book borrowed successfully! Please return within 14 days.', 'success')
     else:
         flash(f'Error: {msg}', 'error')
@@ -325,20 +331,48 @@ def my_loans():
     loans = get_user_loans(session['user_id'])
     return render_template('user/my_loans.html', loans=loans)
 
+@app.route('/badges')
+@login_required
+def user_badges():
+    """Display user's earned and locked badges"""
+    from utils.queries import BADGE_DEFINITIONS, get_user_badges
+    
+    # Get user's earned badges
+    earned_badges = get_user_badges(session['user_id'])
+    earned_badge_ids = {badge['id'] for badge in earned_badges}
+    
+    # Get locked badges (all badges not earned)
+    locked_badges = []
+    for badge_id, badge_info in BADGE_DEFINITIONS.items():
+        if badge_id not in earned_badge_ids:
+            locked_badges.append({
+                'id': badge_id,
+                'name': badge_info['name'],
+                'description': badge_info['description']
+            })
+    
+    return render_template('user/badges.html', 
+                         badges=earned_badges,
+                         locked_badges=locked_badges,
+                         total_badges=len(BADGE_DEFINITIONS))
+
+
 @app.route('/return/<loan_id>', methods=('POST',))
 @login_required
 def user_return_book(loan_id):
-    # Verify that this loan belongs to the current user
+    # Verify that this loan belongs to the current user (using embedded approach)
     from bson.objectid import ObjectId
-    db = get_db()
-    loan = db.loans.find_one({'_id': ObjectId(loan_id)})
+    user = get_user_by_id(session['user_id'])
+    
+    # Find the loan in user's loans array
+    loan = None
+    for l in user.get('loans', []):
+        if l['loan_id'] == ObjectId(loan_id):
+            loan = l
+            break
     
     if not loan:
-        flash('Loan not found', 'error')
-        return redirect(url_for('my_loans'))
-    
-    if str(loan['user_id']) != session['user_id']:
-        flash('You can only return your own books', 'error')
+        flash('Loan not found or you do not have permission to return this book', 'error')
         return redirect(url_for('my_loans'))
     
     success, msg = return_book(loan_id)
@@ -347,6 +381,33 @@ def user_return_book(loan_id):
     else:
         flash(msg, 'error')
     return redirect(url_for('my_loans'))
+
+# --- Book Detail Routes (AI-Powered) ---
+
+@app.route('/book/<book_id>')
+def book_detail(book_id):
+    """Display detailed book information with AI-generated recommendations"""
+    book = get_book_by_id(book_id)
+    if not book:
+        flash('Book not found', 'error')
+        return redirect(url_for('index'))
+    
+    return render_template('book_detail.html', book=book)
+
+@app.route('/api/book/<book_id>/ai-recommendation')
+def get_ai_recommendation(book_id):
+    """API endpoint to get AI-generated book recommendation"""
+    from flask import jsonify
+    from utils.ai_service import get_or_generate_recommendation
+    
+    book = get_book_by_id(book_id)
+    if not book:
+        return jsonify({'error': 'Book not found'}), 404
+    
+    # Generate or retrieve cached recommendation
+    recommendation = get_or_generate_recommendation(book)
+    
+    return jsonify(recommendation)
 
 if __name__ == '__main__':
     app.run(debug=True)

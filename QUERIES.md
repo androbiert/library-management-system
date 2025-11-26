@@ -1,22 +1,22 @@
 # MongoDB Queries Documentation - Library Management System
 
-This document contains all MongoDB queries used in the Library Management System, demonstrating NoSQL best practices.
+This document contains all MongoDB queries used in the Library Management System with **Nested Collections** approach.
 
 ## Collections Schema
 
-### 1. Users Collection
+### 1. Users Collection (with Embedded Loans)
 ```json
 {
   "_id": ObjectId,
   "username": "string",
   "email": "string",
   "password": "hashed_string",
-  "role": "admin|user",
-  "created_at": "datetime"
+    }
+  ]
 }
 ```
 
-### 2. Books Collection
+### 2. Books Collection (with Embedded Loans)
 ```json
 {
   "_id": ObjectId,
@@ -27,33 +27,46 @@ This document contains all MongoDB queries used in the Library Management System
   "cover_image": "string (url)",
   "total_copies": "int",
   "available_copies": "int",
-  "added_at": "datetime"
+  "added_at": "datetime",
+  "current_loans": [
+    {
+      "loan_id": ObjectId,
+      "user_id": ObjectId,
+      "user_name": "string",
+      "borrow_date": "datetime",
+      "deadline": "datetime",
+      "status": "Borrowed|Late"
+    }
+  ],
+  "loan_history": [
+    {
+      "loan_id": ObjectId,
+      "user_id": ObjectId,
+      "user_name": "string",
+      "borrow_date": "datetime",
+      "return_date": "datetime",
+      "status": "Returned"
+    }
+  ]
 }
 ```
 
-### 3. Loans Collection
-```json
-{
-  "_id": ObjectId,
-  "user_id": ObjectId,
-  "book_id": ObjectId,
-  "borrow_date": "datetime",
-  "deadline": "datetime",
-  "return_date": "datetime (nullable)",
-  "status": "Borrowed|Returned|Late|Lost"
-}
-```
+### 3. Note on Loans
+**Loans are now embedded within user and book documents.** There is no separate loans collection. This is a document-oriented approach where:
+- User documents contain their loan history in the `loans` array
+- Book documents contain current loans in `current_loans` array and history in `loan_history` array
 
 ## User Operations
 
-### Create User
+### Create User (with Empty Loans Array)
 ```javascript
 db.users.insertOne({
   username: "john_doe",
   email: "john@example.com",
   password: "hashed_password_here",
   role: "user",
-  created_at: new Date()
+  created_at: new Date(),
+  loans: []  // Initialize empty array
 })
 ```
 
@@ -65,17 +78,6 @@ db.users.findOne({ email: "john@example.com" })
 ### Find User by Username
 ```javascript
 db.users.findOne({ username: "john_doe" })
-```
-
-### Find User by Username OR Email (Flexible Login)
-```javascript
-// Check if input contains @ to determine if it's email or username
-const input = "john@example.com"; // or "john_doe"
-const isEmail = input.includes("@");
-
-db.users.findOne(
-  isEmail ? { email: input } : { username: input }
-)
 ```
 
 ### Update User
@@ -93,7 +95,7 @@ db.users.deleteOne({ _id: ObjectId("user_id") })
 
 ## Book Operations
 
-### Add Book
+### Add Book (with Empty Loan Arrays)
 ```javascript
 db.books.insertOne({
   title: "The Great Gatsby",
@@ -103,7 +105,9 @@ db.books.insertOne({
   cover_image: "https://example.com/cover.jpg",
   total_copies: 10,
   available_copies: 10,
-  added_at: new Date()
+  added_at: new Date(),
+  current_loans: [],    // Initialize empty
+  loan_history: []      // Initialize empty
 })
 ```
 
@@ -146,289 +150,317 @@ db.books.updateOne(
 db.books.deleteOne({ _id: ObjectId("book_id") })
 ```
 
-## Loan Operations
+## Loan Operations (Embedded Arrays)
 
-### Create Loan (with Atomic Stock Decrement)
+### Create Loan - Add to User and Book
 ```javascript
-// Step 1: Check availability
+const loan_id = new ObjectId();
+const user_id = ObjectId("user_id");
+const book_id = ObjectId("book_id");
+
+// Step 1: Get book and user info
 const book = db.books.findOne({ 
-  _id: ObjectId("book_id"),
+  _id: book_id,
   available_copies: { $gt: 0 }
-})
+});
 
-// Step 2: Create loan
-db.loans.insertOne({
-  user_id: ObjectId("user_id"),
-  book_id: ObjectId("book_id"),
-  borrow_date: new Date(),
-  deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
-  return_date: null,
-  status: "Borrowed"
-})
+const user = db.users.findOne({ _id: user_id });
 
-// Step 3: Atomic decrement (ensures no race conditions)
-db.books.updateOne(
-  { _id: ObjectId("book_id") },
-  { $inc: { available_copies: -1 } }
-)
-```
-
-### Return Book (with Atomic Stock Increment)
-```javascript
-// Update loan status
-db.loans.updateOne(
-  { _id: ObjectId("loan_id") },
-  { 
-    $set: { 
-      return_date: new Date(),
-      status: "Returned"
-    } 
+// Step 2: Add loan to user's loans array
+db.users.updateOne(
+      }
+    }
   }
-)
+);
 
-// Atomic increment
+// Step 3: Add loan to book's current_loans and decrement stock
 db.books.updateOne(
-  { _id: ObjectId("book_id") },
-  { $inc: { available_copies: 1 } }
-)
+  { _id: book_id },
+  {
+    $push: {
+      current_loans: {
+        loan_id: loan_id,
+        user_id: user_id,
+        user_name: user.username,
+        borrow_date: new Date(),
+        deadline: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        status: "Borrowed"
+      }
+    },
+    $inc: { available_copies: -1 }
+  }
+);
 ```
 
-### Check if User Has Active Loan (One Book Per User)
+### Return Book - Update User and Book
 ```javascript
-// Check if user already has an active book
-db.loans.findOne({
-  user_id: ObjectId("user_id"),
-  status: { $in: ["Borrowed", "Late"] }
-})
-// Returns null if no active loan, document if user has active book
-```
+const loan_id = ObjectId("loan_id");
 
-### User Self-Return Book (with Verification)
-```javascript
-// Step 1: Verify loan belongs to user
-const loan = db.loans.findOne({
-  _id: ObjectId("loan_id"),
-  user_id: ObjectId("user_id") // Security check
-})
+// Step 1: Find user with this loan
+const user = db.users.findOne({
+  "loans.loan_id": loan_id
+});
 
-if (loan) {
-  // Step 2: Update loan status
-  db.loans.updateOne(
-    { _id: ObjectId("loan_id") },
-    { 
-      $set: { 
+const loan = user.loans.find(l => l.loan_id.equals(loan_id));
+
+// Step 2: Update loan status in user's loans array
+db.users.updateOne(
+  {
+    _id: user._id,
+    "loans.loan_id": loan_id
+  },
+  {
+    $set: {
+      "loans.$.return_date": new Date(),
+      "loans.$.status": "Returned"
+    }
+  }
+);
+
+// Step 3: Find the current loan in book
+const bookWithLoan = db.books.findOne({
+  _id: loan.book_id,
+  "current_loans.loan_id": loan_id
+});
+
+const currentLoan = bookWithLoan.current_loans.find(l => l.loan_id.equals(loan_id));
+
+// Step 4: Move from current_loans to loan_history
+db.books.updateOne(
+  { _id: loan.book_id },
+  {
+    $pull: { current_loans: { loan_id: loan_id } },
+    $push: {
+      loan_history: {
+        loan_id: currentLoan.loan_id,
+        user_id: currentLoan.user_id,
+        user_name: currentLoan.user_name,
+        borrow_date: currentLoan.borrow_date,
         return_date: new Date(),
         status: "Returned"
-      } 
-    }
-  )
-  
-  // Step 3: Increment book stock
-  db.books.updateOne(
-    { _id: loan.book_id },
-    { $inc: { available_copies: 1 } }
-  )
-}
+      }
+    },
+    $inc: { available_copies: 1 }
+  }
+);
 ```
 
-### Get User Loans (with Book Details)
+### Check if User Has Active Loan
 ```javascript
-db.loans.aggregate([
-  { $match: { user_id: ObjectId("user_id") } },
-  { 
-    $lookup: {
-      from: "books",
-      localField: "book_id",
-      foreignField: "_id",
-      as: "book_details"
+// Using $elemMatch to find active loans in embedded array
+const user = db.users.findOne({
+  _id: ObjectId("user_id"),
+  loans: {
+    $elemMatch: {
+      status: { $in: ["Borrowed", "Late"] }
     }
-  },
-  { $unwind: "$book_details" },
-  { $sort: { borrow_date: -1 } }
-])
+  }
+});
+// Returns null if no active loan, user document if has active loan
 ```
 
-### Get All Loans (with User and Book Details)
+### Get User Loans (Direct Access - No Aggregation!)
 ```javascript
-db.loans.aggregate([
-  { 
-    $lookup: {
-      from: "users",
-      localField: "user_id",
-      foreignField: "_id",
-      as: "user_details"
+// Simply get the user document - loans are already embedded!
+const user = db.users.findOne({ _id: ObjectId("user_id") });
+const userLoans = user.loans.sort((a, b) => b.borrow_date - a.borrow_date);
+// Book info is already in book_snapshot!
+```
+
+### Get All Active Loans (From Books)
+```javascript
+// Query books with current_loans
+db.books.aggregate([
+  { $match: { current_loans: { $exists: true, $ne: [] } } },
+  { $unwind: "$current_loans" },
+  {
+    $project: {
+      title: 1,
+      author: 1,
+      category: 1,
+      loan: "$current_loans"
     }
-  },
-  { $unwind: "$user_details" },
-  { 
-    $lookup: {
-      from: "books",
-      localField: "book_id",
-      foreignField: "_id",
-      as: "book_details"
-    }
-  },
-  { $unwind: "$book_details" },
-  { $sort: { borrow_date: -1 } }
-])
+  }
+]);
 ```
 
 ### Get Late Loans
 ```javascript
-db.loans.aggregate([
+// From users - find users with late loans
+db.users.aggregate([
+  { $unwind: "$loans" },
   { 
-    $match: { 
-      status: { $in: ["Borrowed", "Late"] },
-      deadline: { $lt: new Date() }
-    } 
-  },
-  { 
-    $lookup: {
-      from: "users",
-      localField: "user_id",
-      foreignField: "_id",
-      as: "user_details"
+    $match: {
+      "loans.status": { $in: ["Borrowed", "Late"] },
+      "loans.deadline": { $lt: new Date() }
     }
   },
-  { $unwind: "$user_details" },
-  { 
-    $lookup: {
-      from: "books",
-      localField: "book_id",
-      foreignField: "_id",
-      as: "book_details"
+  {
+    $project: {
+      username: 1,
+      email: 1,
+      loan: "$loans"
     }
-  },
-  { $unwind: "$book_details" }
-])
+  }
+]);
 ```
 
 ## Analytics & Reporting
 
 ### Count Active Loans
 ```javascript
-db.loans.countDocuments({
-  status: { $in: ["Borrowed", "Late"] }
-})
+// Count all users with active loans
+db.users.aggregate([
+  { $unwind: "$loans" },
+  {
+    $match: {
+      "loans.status": { $in: ["Borrowed", "Late"] }
+    }
+  },
+  { $count: "active_loans" }
+]);
 ```
 
 ### Loans by Category
 ```javascript
-db.loans.aggregate([
-  { 
-    $lookup: {
-      from: "books",
-      localField: "book_id",
-      foreignField: "_id",
-      as: "book_details"
+// From users' loan history
+db.users.aggregate([
+  { $unwind: "$loans" },
+  {
+    $group: {
+      _id: "$loans.book_snapshot.category",
+      count: { $sum: 1 }
     }
   },
-  { $unwind: "$book_details" },
-  { 
+  { $sort: { count: -1 } }
+]);
+
+// OR from books' loan history
+db.books.aggregate([
+  {
+    $project: {
+      category: 1,
+      total_loans: {
+        $add: [
+          { $size: { $ifNull: ["$current_loans", []] } },
+          { $size: { $ifNull: ["$loan_history", []] } }
+        ]
+      }
+    }
+  },
+  {
     $group: {
-      _id: "$book_details.category",
-      count: { $sum: 1 }
-    } 
+      _id: "$category",
+      count: { $sum: "$total_loans" }
+    }
   },
   { $sort: { count: -1 } }
-])
+]);
 ```
 
 ### Loans by Month (Current Year)
 ```javascript
-db.loans.aggregate([
+db.users.aggregate([
+  { $unwind: "$loans" },
   { 
     $match: {
-      borrow_date: { 
+      "loans.borrow_date": { 
         $gte: new Date(new Date().getFullYear(), 0, 1) 
       }
     } 
   },
   { 
     $group: {
-      _id: { $month: "$borrow_date" },
+      _id: { $month: "$loans.borrow_date" },
       count: { $sum: 1 }
     } 
   },
   { $sort: { _id: 1 } }
-])
+]);
 ```
 
 ### Loan Status Distribution
 ```javascript
-db.loans.aggregate([
+db.users.aggregate([
+  { $unwind: "$loans" },
   { 
     $group: {
-      _id: "$status",
+      _id: "$loans.status",
       count: { $sum: 1 }
     } 
   }
-])
+]);
 ```
 
-## Best Practices
+## Best Practices for Embedded Documents
 
 ### Indexing for Performance
 ```javascript
 // Users
-db.users.createIndex({ email: 1 }, { unique: true })
+db.users.createIndex({ email: 1 }, { unique: true });
+db.users.createIndex({ "loans.status": 1 });
+db.users.createIndex({ "loans.loan_id": 1 });
 
 // Books
-db.books.createIndex({ title: 1 })
-db.books.createIndex({ category: 1 })
-
-// Loans
-db.loans.createIndex({ user_id: 1 })
-db.loans.createIndex({ book_id: 1 })
-db.loans.createIndex({ status: 1 })
-db.loans.createIndex({ deadline: 1 })
+db.books.createIndex({ title: 1 });
+db.books.createIndex({ category: 1 });
+db.books.createIndex({ "current_loans.loan_id": 1 });
+db.books.createIndex({ "current_loans.user_id": 1 });
 ```
 
-### Atomic Operations
-Always use `$inc` for stock management to prevent race conditions:
-- **BAD**: Read → Calculate → Write
-- **GOOD**: `{ $inc: { available_copies: -1 } }`
+### Array Operations
+Key operators for embedded arrays:
+- **$push**: Add new element to array
+- **$pull**: Remove element from array  
+- **$set with positional $**: Update specific array element
+- **$elemMatch**: Query elements in array
+- **$unwind**: Flatten array in aggre
 
-### Aggregation Pipeline
-Use aggregation pipelines for complex queries with joins:
-- `$lookup` for joining collections
-- `$match` for filtering
-- `$group` for aggregations
-- `$sort` for ordering
+gation
+
+### Atomic Operations
+Always use atomic operators for consistency:
+- **GOOD**: `{ $inc: { available_copies: -1 } }`
+- **GOOD**: `{ $push: { loans: {...} } }`
+- **BAD**: Read → Calculate → Write
 
 ## Business Rules Implementation
 
 ### One Book Per User Rule
-Always check for active loans before creating a new loan:
 ```javascript
-const activeLoan = db.loans.findOne({
-  user_id: ObjectId("user_id"),
-  status: { $in: ["Borrowed", "Late"] }
-})
+// Check user's loans array for active loans
+const user = db.users.findOne({
+  _id: ObjectId("user_id"),
+  loans: {
+    $elemMatch: {
+      status: { $in: ["Borrowed", "Late"] }
+    }
+  }
+});
 
-if (activeLoan) {
+if (user) {
   // Reject: User already has an active book
 } else {
   // Allow: User can borrow a book
 }
 ```
 
-### User Permission Verification
-For user self-return, always verify ownership:
-```javascript
-// GOOD: Verify loan belongs to user
-const loan = db.loans.findOne({
-  _id: ObjectId("loan_id"),
-  user_id: ObjectId("current_user_id")
-})
+### Data Consistency
+When creating/updating loans, always update BOTH:
+1. User's `loans` array (with book_snapshot)
+2. Book's `current_loans` or `loan_history` array (with user_name)
 
-// BAD: Trust client-side data without verification
-```
+### Document Size Limits
+MongoDB documents have a 16MB limit. Monitor:
+- User documents with extensive loan history
+- Books with many loans
+
+Consider archiving old loan history if needed.
 
 ## Security Best Practices
 
-1. **Always validate user identity** before allowing returns
-2. **Use atomic operations** for all stock management
-3. **Index foreign keys** (user_id, book_id) for performance
-4. **Check business rules** (one book per user) before transactions
-
+1. **Validate user identity** before modifying loan arrays
+2. **Use atomic operations** for all array modifications
+3. **Index array fields** for performance (loans.loan_id, current_loans.user_id)
+4. **Check business rules** before adding to arrays
+5. **Use positional $ operator** carefully to update correct array element
