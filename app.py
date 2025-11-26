@@ -8,6 +8,7 @@ from datetime import datetime
 import re
 
 app = Flask(__name__)
+app.config['APP_NAME'] = "Ktabna"
 app.config.from_object(Config)
 
 init_app(app)
