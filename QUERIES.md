@@ -11,8 +11,6 @@ This document contains all MongoDB queries used in the Library Management System
   "username": "string",
   "email": "string",
   "password": "hashed_string",
-    }
-  ]
 }
 ```
 

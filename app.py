@@ -5,6 +5,7 @@ from utils.queries import *
 from werkzeug.security import check_password_hash
 from functools import wraps
 from datetime import datetime
+import re
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -200,9 +201,19 @@ def api_stats():
 @admin_required
 def add_book_route():
     if request.method == 'POST':
+        title = request.form['title'].strip()
+        author = request.form['author'].strip()
+        db = get_db()
+        existing_book = db.books.find_one({
+            'title': {'$regex': f'^{re.escape(title)}$', '$options': 'i'},
+            'author': {'$regex': f'^{re.escape(author)}$', '$options': 'i'}
+        })
+        if existing_book:
+            flash('Book already exists', 'error')
+            return redirect(url_for('add_book_route'))
         add_book(
-            request.form['title'],
-            request.form['author'],
+            title,
+            author,
             request.form['category'],
             request.form['description'],
             request.form['cover_image'],
