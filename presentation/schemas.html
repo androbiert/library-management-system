@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schémas de Base de Données - Ktabna</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            📚 Ktabna
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    Accueil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="nosql-justification.html" class="nav-link">
+                    <span class="nav-icon">💡</span>
+                    Pourquoi NoSQL
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="schemas.html" class="nav-link active">
+                    <span class="nav-icon">🗄️</span>
+                    Schémas BDD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="database-operations.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    Opérations CRUD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="application.html" class="nav-link">
+                    <span class="nav-icon">🖥️</span>
+                    Application
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">🗄️ Schémas de Base de Données</h1>
+                <p class="hero-subtitle">Comparaison SQL vs NoSQL</p>
+            </section>
+
+            <!-- SQL Approach -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Approche SQL (Relationnelle)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Structure Normalisée - 7 Tables</div>
+                    <p>Dans une approche SQL traditionnelle, les données sont <strong>normalisées</strong> (3NF) et
+                        réparties sur 7 tables :</p>
+
+                    <div class="diagram-container">
+                        <div class="schema-box">
+                            <h4>👥 USERS</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, username, email, password_hash, role, created_at, books_read
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>📚 BOOKS</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, title, author, category_id FK, description, cover_image, total_copies,
+                                available_copies
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>📁 CATEGORIES</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, name, description
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>📖 LOANS</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, user_id FK, book_id FK, borrow_date, deadline, return_date, status
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>🏆 BADGES</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, badge_key, name, description, criteria
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>🔗 USER_BADGES</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, user_id FK, badge_id FK, earned_at
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>🔗 USER_CATEGORIES_EXPLORED</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                id, user_id FK, category_id FK, explored_at
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SQL Problems -->
+                <div class="card">
+                    <div class="card-header">❌ Problématiques de l'Approche SQL</div>
+
+                    <h4 style="color: var(--danger);">Problème 1 : Requête Complexe pour l'Historique</h4>
+                    <div class="code-header">
+                        <span class="code-language">SQL - Requiert 3 JOINS</span>
+                    </div>
+                    <pre><code><span class="keyword">SELECT</span> 
+    u.username, u.email, u.books_read,
+    l.id <span class="keyword">as</span> loan_id, l.borrow_date, l.deadline, l.status,
+    b.title, b.author, b.cover_image,
+    c.name <span class="keyword">as</span> category
+<span class="keyword">FROM</span> users u
+<span class="keyword">LEFT JOIN</span> loans l <span class="keyword">ON</span> u.id = l.user_id
+<span class="keyword">LEFT JOIN</span> books b <span class="keyword">ON</span> l.book_id = b.id
+<span class="keyword">LEFT JOIN</span> categories c <span class="keyword">ON</span> b.category_id = c.id
+<span class="keyword">WHERE</span> u.id = ?
+<span class="keyword">ORDER BY</span> l.borrow_date <span class="keyword">DESC</span>;</code></pre>
+
+                    <ul class="feature-list">
+                        <li style="border-color: var(--danger);">❌ 3 JOINs = opération coûteuse</li>
+                        <li style="border-color: var(--danger);">❌ Si le livre est supprimé, l'historique perd les infos
+                        </li>
+                        <li style="border-color: var(--danger);">❌ Performance dégradée avec beaucoup de données</li>
+                    </ul>
+
+                    <h4 style="color: var(--danger); margin-top: var(--spacing-md);">Problème 2 : Transaction Complexe
+                        pour Emprunter un Livre</h4>
+                    <div class="code-header">
+                        <span class="code-language">SQL - 6 Requêtes dans une Transaction</span>
+                    </div>
+                    <pre><code><span class="comment">-- Étape 1: Vérifier disponibilité</span>
+<span class="keyword">SELECT</span> available_copies <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> id = ? <span class="keyword">FOR UPDATE</span>;
+
+<span class="comment">-- Étape 2: Créer le prêt</span>
+<span class="keyword">INSERT INTO</span> loans (...) <span class="keyword">VALUES</span> (...);
+
+<span class="comment">-- Étape 3: Décrémenter le stock</span>
+<span class="keyword">UPDATE</span> books <span class="keyword">SET</span> available_copies = available_copies - <span class="number">1</span>;
+
+<span class="comment">-- Étape 4: Incrémenter books_read</span>
+<span class="keyword">UPDATE</span> users <span class="keyword">SET</span> books_read = books_read + <span class="number">1</span>;
+
+<span class="comment">-- Étape 5-6: Gérer catégories et badges...</span>
+<span class="keyword">COMMIT</span>;</code></pre>
+
+                    <ul class="feature-list">
+                        <li style="border-color: var(--danger);">❌ Minimum 6 requêtes dans une transaction</li>
+                        <li style="border-color: var(--danger);">❌ Risque de deadlock</li>
+                        <li style="border-color: var(--danger);">❌ Complexité du code élevée</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- NoSQL Approach -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Approche NoSQL (MongoDB)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Structure Dénormalisée - 2 Collections</div>
+                    <p>MongoDB utilise une approche <strong>dénormalisée</strong> avec seulement <strong>2
+                            collections</strong> et des documents embarqués :</p>
+
+                    <div class="diagram-container">
+                        <div class="schema-box">
+                            <h4>👥 Collection: users</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                <strong>Documents embarqués:</strong><br>
+                                • Informations utilisateur<br>
+                                • Badges array<br>
+                                • <strong>Loans array</strong> (avec book snapshots)<br>
+                                • Categories explored array
+                            </p>
+                        </div>
+                        <div class="schema-box">
+                            <h4>📚 Collection: books</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">
+                                <strong>Documents embarqués:</strong><br>
+                                • Informations livre<br>
+                                • <strong>Current loans array</strong><br>
+                                • <strong>Loan history array</strong><br>
+                                • Copies management
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User Document -->
+                <div class="card">
+                    <div class="card-header">📄 Document Utilisateur (users collection)</div>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Document MongoDB</span>
+                    </div>
+                    <pre><code>{
+  <span class="string">"_id"</span>: ObjectId(<span class="string">"507f1f77bcf86cd799439011"</span>),
+  
+  <span class="comment">// Informations de base</span>
+  <span class="string">"username"</span>: <span class="string">"Andro"</span>,
+  <span class="string">"email"</span>: <span class="string">"andro@library.com"</span>,
+  <span class="string">"password"</span>: <span class="string">"$2b$12$hashed_password"</span>,
+  <span class="string">"role"</span>: <span class="string">"user"</span>,
+  <span class="string">"created_at"</span>: ISODate(<span class="string">"2024-01-10"</span>),
+  
+  <span class="comment">// Statistiques</span>
+  <span class="string">"books_read"</span>: <span class="number">12</span>,
+  <span class="string">"categories_explored"</span>: [<span class="string">"Classic"</span>, <span class="string">"Fantasy"</span>],
+  
+  <span class="comment">// Badges embarqués</span>
+  <span class="string">"badges"</span>: [
+    { <span class="string">"badge_id"</span>: <span class="string">"welcome"</span>, <span class="string">"earned_at"</span>: ISODate(...) },
+    { <span class="string">"badge_id"</span>: <span class="string">"bookworm"</span>, <span class="string">"earned_at"</span>: ISODate(...) }
+  ],
+  
+  <span class="comment">// HISTORIQUE COMPLET EMBARQUÉ</span>
+  <span class="string">"loans"</span>: [
+    {
+      <span class="string">"loan_id"</span>: ObjectId(<span class="string">"..."</span>),
+      <span class="string">"book_id"</span>: ObjectId(<span class="string">"..."</span>),
+      
+      <span class="comment">// SNAPSHOT du livre (données figées)</span>
+      <span class="string">"book_snapshot"</span>: {
+        <span class="string">"title"</span>: <span class="string">"1984"</span>,
+        <span class="string">"author"</span>: <span class="string">"George Orwell"</span>,
+        <span class="string">"category"</span>: <span class="string">"Classic"</span>,
+        <span class="string">"cover_image"</span>: <span class="string">"https://..."</span>
+      },
+      
+      <span class="string">"borrow_date"</span>: ISODate(<span class="string">"2024-01-15"</span>),
+      <span class="string">"deadline"</span>: ISODate(<span class="string">"2024-01-29"</span>),
+      <span class="string">"return_date"</span>: ISODate(<span class="string">"2024-01-20"</span>),
+      <span class="string">"status"</span>: <span class="string">"Returned"</span>
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <!-- Book Document -->
+                <div class="card">
+                    <div class="card-header">📄 Document Livre (books collection)</div>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Document MongoDB</span>
+                    </div>
+                    <pre><code>{
+  <span class="string">"_id"</span>: ObjectId(<span class="string">"507f191e810c19729de860ea"</span>),
+  
+  <span class="comment">// Métadonnées du livre</span>
+  <span class="string">"title"</span>: <span class="string">"1984"</span>,
+  <span class="string">"author"</span>: <span class="string">"George Orwell"</span>,
+  <span class="string">"category"</span>: <span class="string">"Classic"</span>,  <span class="comment">// Pas de FK!</span>
+  <span class="string">"description"</span>: <span class="string">"Dystopian social science fiction"</span>,
+  <span class="string">"cover_image"</span>: <span class="string">"https://example.com/1984.jpg"</span>,
+  
+  <span class="comment">// Gestion du stock</span>
+  <span class="string">"total_copies"</span>: <span class="number">5</span>,
+  <span class="string">"available_copies"</span>: <span class="number">3</span>,
+  <span class="string">"added_at"</span>: ISODate(<span class="string">"2024-01-01"</span>),
+  
+  <span class="comment">// EMPRUNTS ACTUELS EMBARQUÉS</span>
+  <span class="string">"current_loans"</span>: [
+    {
+      <span class="string">"loan_id"</span>: ObjectId(<span class="string">"..."</span>),
+      <span class="string">"user_id"</span>: ObjectId(<span class="string">"..."</span>),
+      <span class="string">"user_name"</span>: <span class="string">"Andro"</span>,
+      <span class="string">"borrow_date"</span>: ISODate(<span class="string">"2024-03-10"</span>),
+      <span class="string">"deadline"</span>: ISODate(<span class="string">"2024-03-24"</span>),
+      <span class="string">"status"</span>: <span class="string">"Borrowed"</span>
+    }
+  ],
+  
+  <span class="comment">// HISTORIQUE DES EMPRUNTS PASSÉS</span>
+  <span class="string">"loan_history"</span>: [
+    {
+      <span class="string">"loan_id"</span>: ObjectId(<span class="string">"..."</span>),
+      <span class="string">"user_id"</span>: ObjectId(<span class="string">"..."</span>),
+      <span class="string">"user_name"</span>: <span class="string">"Andro"</span>,
+      <span class="string">"borrow_date"</span>: ISODate(<span class="string">"2024-01-15"</span>),
+      <span class="string">"return_date"</span>: ISODate(<span class="string">"2024-01-20"</span>),
+      <span class="string">"status"</span>: <span class="string">"Returned"</span>
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <!-- MongoDB Solutions -->
+                <div class="card">
+                    <div class="card-header">✅ Solutions MongoDB</div>
+
+                    <h4 style="color: var(--success);">Solution 1 : Historique en 1 Seule Requête</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - MongoDB</span>
+                    </div>
+                    <pre><code><span class="comment">// UNE SEULE requête - PAS DE JOIN!</span>
+db.users.<span class="function">findOne</span>({ _id: ObjectId(<span class="string">"user_id"</span>) })</code></pre>
+
+                    <div class="card-grid">
+                        <div class="badge badge-success">✅ 1 requête au lieu de 3 JOINs</div>
+                        <div class="badge badge-success">✅ Performance optimale</div>
+                        <div class="badge badge-success">✅ Snapshots conservés</div>
+                    </div>
+
+                    <h4 style="color: var(--success); margin-top: var(--spacing-md);">Solution 2 : Emprunter un Livre (2
+                        Opérations Atomiques)</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - MongoDB</span>
+                    </div>
+                    <pre><code><span class="comment">// Opération 1: Ajouter à l'utilisateur</span>
+db.users.<span class="function">updateOne</span>(
+  { _id: ObjectId(<span class="string">"user_id"</span>) },
+  {
+    <span class="keyword">$push</span>: { loans: {...} },
+    <span class="keyword">$inc</span>: { books_read: <span class="number">1</span> }
+  }
+)
+
+<span class="comment">// Opération 2: Mettre à jour le livre</span>
+db.books.<span class="function">updateOne</span>(
+  { _id: ObjectId(<span class="string">"book_id"</span>) },
+  {
+    <span class="keyword">$push</span>: { current_loans: {...} },
+    <span class="keyword">$inc</span>: { available_copies: <span class="number">-1</span> }
+  }
+)</code></pre>
+
+                    <div class="card-grid">
+                        <div class="badge badge-success">✅ Seulement 2 opérations</div>
+                        <div class="badge badge-success">✅ Opérations atomiques</div>
+                        <div class="badge badge-success">✅ Pas de transaction complexe</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final Comparison -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚖️</span>
+                    Tableau Comparatif Final
+                </h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>SQL</th>
+                            <th>NoSQL (MongoDB)</th>
+                            <th>Gagnant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nombre de tables/collections</strong></td>
+                            <td>7 tables</td>
+                            <td>2 collections</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Requête : Historique utilisateur</strong></td>
+                            <td>3 JOINs</td>
+                            <td>1 requête simple</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Requête : Emprunter un livre</strong></td>
+                            <td>6 requêtes + transaction</td>
+                            <td>2 requêtes atomiques</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance lecture</strong></td>
+                            <td>Moyenne (joins)</td>
+                            <td>Excellente (embedded)</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Intégrité référentielle</strong></td>
+                            <td>Foreign Keys strict</td>
+                            <td>Application-level</td>
+                            <td class="winner">✅ SQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexibilité schéma</strong></td>
+                            <td>Rigide</td>
+                            <td>Flexible</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Données historiques</strong></td>
+                            <td>Perdues si livre supprimé</td>
+                            <td>Snapshots conservés</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scalabilité</strong></td>
+                            <td>Verticale</td>
+                            <td>Horizontale (sharding)</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Navigation -->
+            <section class="section">
+                <div class="flex flex-center gap-2">
+                    <a href="nosql-justification.html" class="btn btn-outline">← Pourquoi NoSQL</a>
+                    <a href="database-operations.html" class="btn btn-primary">Suivant: Opérations →</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Présentation de l'Application - Ktabna</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            📚 Ktabna
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    Accueil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="nosql-justification.html" class="nav-link">
+                    <span class="nav-icon">💡</span>
+                    Pourquoi NoSQL
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="schemas.html" class="nav-link">
+                    <span class="nav-icon">🗄️</span>
+                    Schémas BDD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="database-operations.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    Opérations CRUD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="application.html" class="nav-link active">
+                    <span class="nav-icon">🖥️</span>
+                    Application
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">🖥️ Présentation de l'Application</h1>
+                <p class="hero-subtitle">Architecture et Fonctionnalités</p>
+            </section>
+
+            <!-- Architecture -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🏗️</span>
+                    Architecture de l'Application
+                </h2>
+
+                <div class="card">
+                    <div class="diagram-container">
+                        <div class="schema-box">
+                            <h4>🎨 Frontend (Templates)</h4>
+                            <p style="font-size: 0.9rem;">HTML + CSS + JavaScript + Chart.js</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">↓ HTTP Requests</p>
+                        </div>
+
+                        <div class="schema-box">
+                            <h4>⚙️ Flask Backend (app.py)</h4>
+                            <p style="font-size: 0.9rem;">
+                                • Routing<br>
+                                • Session-based Authentication<br>
+                                • Business Logic
+                            </p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">↓ Function Calls</p>
+                        </div>
+
+                        <div class="schema-box">
+                            <h4>📊 Data Layer (utils/queries.py)</h4>
+                            <p style="font-size: 0.9rem;">
+                                • CRUD Operations<br>
+                                • Aggregations<br>
+                                • Business Rules
+                            </p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">↓ PyMongo Queries</p>
+                        </div>
+
+                        <div class="schema-box" style="background: var(--gradient-primary); color: white;">
+                            <h4>🗄️ MongoDB Database</h4>
+                            <p style="font-size: 0.9rem;">Collections: users, books</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Pages -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📱</span>
+                    Interfaces Principales
+                </h2>
+
+                <!-- Home Page -->
+                <div class="card">
+                    <div class="card-header">1️⃣ Page d'Accueil (Public)</div>
+                    <p><strong>Route :</strong> <code>/</code></p>
+
+                    <h4>Fonctionnalités :</h4>
+                    <ul class="feature-list">
+                        <li>Catalogue de livres visible sans connexion</li>
+                        <li>Statistiques publiques (livres, membres actifs)</li>
+                        <li>Recherche de base</li>
+                        <li>Boutons Login/Register</li>
+                    </ul>
+
+                    <div class="code-header">
+                        <span class="code-language">Python - Flask Route</span>
+                    </div>
+                    <pre><code><span class="keyword">@app</span>.route(<span class="string">'/'</span>)
+<span class="keyword">def</span> <span class="function">index</span>():
+    books = get_all_books()
+    categories = get_all_categories()
+    total_books = <span class="function">len</span>(books)
+    active_members = <span class="function">len</span>([u <span class="keyword">for</span> u <span class="keyword">in</span> get_all_users() <span class="keyword">if</span> u[<span class="string">'role'</span>] == <span class="string">'user'</span>])
+    
+    <span class="keyword">return</span> render_template(<span class="string">'index.html'</span>, 
+                         books=books,
+                         total_books=total_books,
+                         active_members=active_members)</code></pre>
+                </div>
+
+                <!-- Admin Dashboard -->
+                <div class="card">
+                    <div class="card-header">2️⃣ Dashboard Administrateur</div>
+                    <p><strong>Route :</strong> <code>/admin</code></p>
+                    <p><strong>Accès :</strong> Admin uniquement (decorator <code>@admin_required</code>)</p>
+
+                    <h4>Fonctionnalités :</h4>
+                    <ul class="feature-list">
+                        <li><strong>Statistiques en temps réel</strong> : Total livres, utilisateurs, emprunts, retards
+                        </li>
+                        <li><strong>Graphiques Chart.js</strong> : Emprunts par catégorie (Pie), Évolution mensuelle
+                            (Line), Statuts (Doughnut)</li>
+                        <li><strong>Actions rapides</strong> : Gérer les livres, utilisateurs, emprunts</li>
+                    </ul>
+
+                    <div class="card-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">📚</div>
+                            <h4>Books</h4>
+                            <p style="font-size: 2rem; font-weight: bold; color: var(--primary);">250</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">👥</div>
+                            <h4>Users</h4>
+                            <p style="font-size: 2rem; font-weight: bold; color: var(--primary);">48</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📖</div>
+                            <h4>Loans</h4>
+                            <p style="font-size: 2rem; font-weight: bold; color: var(--primary);">132</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚠️</div>
+                            <h4>Late</h4>
+                            <p style="font-size: 2rem; font-weight: bold; color: var(--danger);">7</p>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-top: var(--spacing-md);">API Endpoint pour Charts :</h4>
+                    <div class="code-header">
+                        <span class="code-language">Python - Flask Route</span>
+                    </div>
+                    <pre><code><span class="keyword">@app</span>.route(<span class="string">'/api/stats'</span>)
+<span class="keyword">@admin_required</span>
+<span class="keyword">def</span> <span class="function">api_stats</span>():
+    loans_by_category = get_loans_by_category()
+    loans_by_month = get_loans_by_month()
+    
+    <span class="keyword">return</span> jsonify({
+        <span class="string">'category'</span>: {
+            <span class="string">'labels'</span>: [item[<span class="string">'_id'</span>] <span class="keyword">for</span> item <span class="keyword">in</span> loans_by_category],
+            <span class="string">'data'</span>: [item[<span class="string">'count'</span>] <span class="keyword">for</span> item <span class="keyword">in</span> loans_by_category]
+        },
+        <span class="string">'monthly'</span>: {...}
+    })</code></pre>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Chart.js Integration</span>
+                    </div>
+                    <pre><code><span class="function">fetch</span>(<span class="string">'/api/stats'</span>)
+  .then(res => res.json())
+  .then(data => {
+    <span class="keyword">new</span> Chart(ctx, {
+      type: <span class="string">'pie'</span>,
+      data: {
+        labels: data.category.labels,
+        datasets: [{
+          data: data.category.data,
+          backgroundColor: [<span class="string">'#6366f1'</span>, <span class="string">'#8b5cf6'</span>, <span class="string">'#ec4899'</span>]
+        }]
+      }
+    });
+  });</code></pre>
+                </div>
+
+                <!-- User Catalog -->
+                <div class="card">
+                    <div class="card-header">3️⃣ Catalogue Utilisateur</div>
+                    <p><strong>Route :</strong> <code>/catalog</code></p>
+
+                    <h4>Fonctionnalités :</h4>
+                    <ul class="feature-list">
+                        <li><strong>Recherche en temps réel</strong> : Par titre, auteur ou catégorie</li>
+                        <li><strong>Filtrage</strong> : Par catégorie avec dropdown</li>
+                        <li><strong>Affichage</strong> : Grid de cartes avec couvertures</li>
+                        <li><strong>Disponibilité</strong> : Badge indiquant le stock</li>
+                        <li><strong>Emprunt rapide</strong> : Bouton en un clic</li>
+                    </ul>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Recherche en Temps Réel</span>
+                    </div>
+                    <pre><code>searchInput.addEventListener(<span class="string">'input'</span>, <span class="keyword">function</span>() {
+    <span class="keyword">const</span> query = <span class="keyword">this</span>.value.toLowerCase();
+    bookCards.forEach(card => {
+        <span class="keyword">const</span> title = card.dataset.title.toLowerCase();
+        <span class="keyword">const</span> author = card.dataset.author.toLowerCase();
+        
+        <span class="keyword">if</span> (title.includes(query) || author.includes(query)) {
+            card.style.display = <span class="string">'block'</span>;
+        } <span class="keyword">else</span> {
+            card.style.display = <span class="string">'none'</span>;
+        }
+    });
+});</code></pre>
+                </div>
+
+                <!-- User History -->
+                <div class="card">
+                    <div class="card-header">4️⃣ Historique Personnel</div>
+                    <p><strong>Route :</strong> <code>/my-loans</code></p>
+
+                    <h4>Fonctionnalités :</h4>
+                    <ul class="feature-list">
+                        <li>Affichage de tous les emprunts (passés et actuels)</li>
+                        <li>Badges de statut colorés (Borrowed, Returned, Late)</li>
+                        <li>Bouton de retour pour livres actifs</li>
+                        <li>Timeline visuelle de l'historique</li>
+                    </ul>
+
+                    <div class="code-header">
+                        <span class="code-language">Python - Route</span>
+                    </div>
+                    <pre><code><span class="keyword">@app</span>.route(<span class="string">'/my-loans'</span>)
+<span class="keyword">@login_required</span>
+<span class="keyword">def</span> <span class="function">my_loans</span>():
+    user = get_user_by_id(session[<span class="string">'user_id'</span>])
+    loans = user.get(<span class="string">'loans'</span>, [])
+    
+    <span class="comment"># Séparer actifs et passés</span>
+    active_loans = [l <span class="keyword">for</span> l <span class="keyword">in</span> loans <span class="keyword">if</span> l[<span class="string">'status'</span>] <span class="keyword">in</span> [<span class="string">'Borrowed'</span>, <span class="string">'Late'</span>]]
+    past_loans = [l <span class="keyword">for</span> l <span class="keyword">in</span> loans <span class="keyword">if</span> l[<span class="string">'status'</span>] == <span class="string">'Returned'</span>]
+    
+    <span class="keyword">return</span> render_template(<span class="string">'my_loans.html'</span>, 
+                         active=active_loans, 
+                         past=past_loans)</code></pre>
+                </div>
+            </section>
+
+            <!-- Admin Features -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">👨‍💼</span>
+                    Fonctionnalités Administrateur
+                </h2>
+
+                <div class="card-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">➕</div>
+                        <h3 class="feature-title">Gestion des Livres</h3>
+                        <ul class="feature-list">
+                            <li>Ajouter un livre (formulaire complet)</li>
+                            <li>Modifier les détails</li>
+                            <li>Upload d'images de couverture</li>
+                            <li>Supprimer un livre</li>
+                            <li>Gérer les stocks (copies)</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3 class="feature-title">Gestion des Utilisateurs</h3>
+                        <ul class="feature-list">
+                            <li>Créer comptes admin/user</li>
+                            <li>Voir liste complète</li>
+                            <li>Consulter historique individuel</li>
+                            <li>Gérer les rôles</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+                        <h3 class="feature-title">Gestion des Emprunts</h3>
+                        <ul class="feature-list">
+                            <li>Créer emprunt manuel</li>
+                            <li>Définir deadline personnalisée</li>
+                            <li>Voir tous les emprunts actifs</li>
+                            <li>Détecter les retards</li>
+                            <li>Traiter les retours</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Analytics & Rapports</h3>
+                        <ul class="feature-list">
+                            <li>Graphiques Chart.js interactifs</li>
+                            <li>Statistiques en temps réel</li>
+                            <li>Tendances mensuelles</li>
+                            <li>Top catégories</li>
+                            <li>KPIs du système</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User Features -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">👤</span>
+                    Fonctionnalités Utilisateur
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">🏆 Système de Badges (Gamification)</div>
+                    <p>Les utilisateurs débloquent des badges en fonction de leur activité :</p>
+
+                    <div class="card-grid">
+                        <div class="card">
+                            <div style="font-size: 2.5rem; text-align: center;">🎉</div>
+                            <h4 style="text-align: center;">Welcome</h4>
+                            <p style="text-align: center; color: var(--text-muted);">Premier login</p>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 2.5rem; text-align: center;">📖</div>
+                            <h4 style="text-align: center;">First Reader</h4>
+                            <p style="text-align: center; color: var(--text-muted);">Premier livre emprunté</p>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 2.5rem; text-align: center;">🐛</div>
+                            <h4 style="text-align: center;">Bookworm</h4>
+                            <p style="text-align: center; color: var(--text-muted);">5+ livres lus</p>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 2.5rem; text-align: center;">📚</div>
+                            <h4 style="text-align: center;">Avid Reader</h4>
+                            <p style="text-align: center; color: var(--text-muted);">10+ livres lus</p>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 2.5rem; text-align: center;">🏆</div>
+                            <h4 style="text-align: center;">Book Master</h4>
+                            <p style="text-align: center; color: var(--text-muted);">20+ livres lus</p>
+                        </div>
+                        <div class="card">
+                            <div style="font-size: 2.5rem; text-align: center;">🌍</div>
+                            <h4 style="text-align: center;">Explorer</h4>
+                            <p style="text-align: center; color: var(--text-muted);">10+ catégories explorées</p>
+                        </div>
+                    </div>
+
+                    <div class="code-header">
+                        <span class="code-language">Python - Badge Attribution Automatique</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">check_and_award_badges</span>(user_id):
+    db = get_db()
+    user = db.users.find_one({<span class="string">"_id"</span>: ObjectId(user_id)})
+    
+    badges_to_add = []
+    current_badges = [b[<span class="string">'badge_id'</span>] <span class="keyword">for</span> b <span class="keyword">in</span> user.get(<span class="string">'badges'</span>, [])]
+    
+    <span class="comment"># Bookworm: 5+ livres</span>
+    <span class="keyword">if</span> user[<span class="string">'books_read'</span>] >= <span class="number">5</span> <span class="keyword">and</span> <span class="string">'bookworm'</span> <span class="keyword">not in</span> current_badges:
+        badges_to_add.append({<span class="string">'badge_id'</span>: <span class="string">'bookworm'</span>, <span class="string">'earned_at'</span>: datetime.utcnow()})
+    
+    <span class="comment"># Avid Reader: 10+ livres</span>
+    <span class="keyword">if</span> user[<span class="string">'books_read'</span>] >= <span class="number">10</span> <span class="keyword">and</span> <span class="string">'avid_reader'</span> <span class="keyword">not in</span> current_badges:
+        badges_to_add.append({<span class="string">'badge_id'</span>: <span class="string">'avid_reader'</span>, <span class="string">'earned_at'</span>: datetime.utcnow()})
+    
+    <span class="comment"># Explorer: 10+ catégories</span>
+    <span class="keyword">if</span> <span class="function">len</span>(user.get(<span class="string">'categories_explored'</span>, [])) >= <span class="number">10</span>:
+        <span class="keyword">if</span> <span class="string">'explorer'</span> <span class="keyword">not in</span> current_badges:
+            badges_to_add.append({<span class="string">'badge_id'</span>: <span class="string">'explorer'</span>, <span class="string">'earned_at'</span>: datetime.utcnow()})
+    
+    <span class="keyword">if</span> badges_to_add:
+        db.users.update_one(
+            {<span class="string">"_id"</span>: user[<span class="string">"_id"</span>]},
+            {<span class="string">"$push"</span>: {<span class="string">"badges"</span>: {<span class="string">"$each"</span>: badges_to_add}}}
+        )</code></pre>
+                </div>
+            </section>
+
+            <!-- Technical Features -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    Fonctionnalités Techniques
+                </h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>🌍 Internationalisation (i18n)</h3>
+                        <p>Support Anglais/Arabe avec Flask-Babel</p>
+                        <div class="code-header">
+                            <span class="code-language">Python</span>
+                        </div>
+                        <pre><code><span class="keyword">from</span> flask_babel <span class="keyword">import</span> Babel, gettext <span class="keyword">as</span> _
+
+babel = Babel(app)
+
+<span class="keyword">@app</span>.route(<span class="string">'/change-language/&lt;lang&gt;'</span>)
+<span class="keyword">def</span> <span class="function">change_language</span>(lang):
+    session[<span class="string">'language'</span>] = lang
+    <span class="keyword">return</span> redirect(request.referrer)</code></pre>
+                    </div>
+
+                    <div class="card">
+                        <h3>🔒 Authentification Sécurisée</h3>
+                        <p>Hashage des mots de passe avec Werkzeug</p>
+                        <div class="code-header">
+                            <span class="code-language">Python</span>
+                        </div>
+                        <pre><code><span class="keyword">from</span> werkzeug.security <span class="keyword">import</span> generate_password_hash, check_password_hash
+
+<span class="comment"># Lors de l'inscription</span>
+hashed = generate_password_hash(password)
+
+<span class="comment"># Lors de la connexion</span>
+<span class="keyword">if</span> check_password_hash(user[<span class="string">'password'</span>], password):
+    <span class="comment"># Login réussi</span></code></pre>
+                    </div>
+
+                    <div class="card">
+                        <h3>🎨 Design Moderne</h3>
+                        <ul class="feature-list">
+                            <li>Design responsive (mobile-first)</li>
+                            <li>Glassmorphism effects</li>
+                            <li>Smooth animations</li>
+                            <li>Dark theme optimisé</li>
+                            <li>Accessibility (ARIA labels)</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>📊 API REST</h3>
+                        <p>Endpoints pour statistiques dynamiques</p>
+                        <ul class="feature-list">
+                            <li><code>GET /api/stats</code> - Dashboard data</li>
+                            <li><code>GET /api/books</code> - Liste des livres</li>
+                            <li><code>GET /api/categories</code> - Catégories disponibles</li>
+                            <li><code>POST /api/borrow</code> - Emprunter un livre</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screenshots Placeholder -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📸</span>
+                    Aperçu Visuel
+                </h2>
+
+                <div class="card">
+                    <h3 style="text-align: center; margin-bottom: var(--spacing-lg);">Interface Principale</h3>
+                    <div class="diagram-container">
+                        <div
+                            style="background: var(--bg-secondary); padding: var(--spacing-xl); border-radius: var(--radius-md); text-align: center;">
+                            <p style="font-size: 1.25rem; color: var(--text-secondary);">
+                                🖼️ Interface avec design moderne<br>
+                                ✨ Glassmorphism et animations fluides<br>
+                                📱 Responsive sur tous les appareils<br>
+                                🎨 Thème sombre élégant
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Conclusion
+                </h2>
+
+                <div class="card">
+                    <h3>Ktabna : Une Solution Complète et Moderne</h3>
+                    <p><strong>Ktabna</strong> démontre l'efficacité de MongoDB pour un système de gestion de
+                        bibliothèque grâce à :</p>
+
+                    <div class="card-grid">
+                        <div class="badge badge-success">✅ Schéma flexible et évolutif</div>
+                        <div class="badge badge-success">✅ Performance optimale des lectures</div>
+                        <div class="badge badge-success">✅ Documents embarqués pour simplification</div>
+                        <div class="badge badge-success">✅ Snapshots immuables pour historique</div>
+                        <div class="badge badge-success">✅ Aggregation Pipeline pour analytics</div>
+                        <div class="badge badge-success">✅ Scalabilité horizontale native</div>
+                    </div>
+
+                    <p
+                        style="margin-top: var(--spacing-md); text-align: center; font-size: 1.25rem; color: var(--primary-light);">
+                        <strong>MongoDB est le choix optimal pour Ktabna! 🎉</strong>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Navigation -->
+            <section class="section">
+                <div class="flex flex-center gap-2">
+                    <a href="database-operations.html" class="btn btn-outline">← Opérations</a>
+                    <a href="index.html" class="btn btn-primary">Retour à l'accueil 🏠</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>

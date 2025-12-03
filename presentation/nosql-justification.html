@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Justification du Choix NoSQL - Ktabna</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            📚 Ktabna
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    Accueil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="nosql-justification.html" class="nav-link active">
+                    <span class="nav-icon">💡</span>
+                    Pourquoi NoSQL
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="schemas.html" class="nav-link">
+                    <span class="nav-icon">🗄️</span>
+                    Schémas BDD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="database-operations.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    Opérations CRUD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="application.html" class="nav-link">
+                    <span class="nav-icon">🖥️</span>
+                    Application
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">💡 Pourquoi NoSQL ?</h1>
+                <p class="hero-subtitle">Justification du choix MongoDB pour Ktabna</p>
+            </section>
+
+            <!-- Database Type -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🗄️</span>
+                    Type de Base de Données
+                </h2>
+                <div class="card">
+                    <h3>MongoDB - Base de Données Orientée Documents</h3>
+                    <p>Nous avons choisi <strong>MongoDB</strong>, une base de données <strong>Document Store</strong>
+                        NoSQL qui stocke les données au format BSON (Binary JSON).</p>
+                </div>
+            </section>
+
+            <!-- Main Reasons -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    5 Raisons Principales
+                </h2>
+
+                <!-- Reason 1: Schema Flexibility -->
+                <div class="card">
+                    <div class="card-header">1️⃣ Flexibilité du Schéma</div>
+                    <p>Dans une bibliothèque, les données peuvent évoluer sans nécessiter de migrations complexes :</p>
+                    <ul class="feature-list">
+                        <li>Ajout de nouveaux champs (badges, notes, recommandations)</li>
+                        <li>Variation des métadonnées de livres (certains ont des ISBN, d'autres non)</li>
+                        <li>MongoDB permet d'ajouter des champs sans migration de schéma</li>
+                    </ul>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - MongoDB</span>
+                    </div>
+                    <pre><code><span class="comment">// Livre simple</span>
+{
+  <span class="string">"title"</span>: <span class="string">"1984"</span>,
+  <span class="string">"author"</span>: <span class="string">"George Orwell"</span>
+}
+
+<span class="comment">// Livre avec métadonnées enrichies (même collection!)</span>
+{
+  <span class="string">"title"</span>: <span class="string">"Harry Potter"</span>,
+  <span class="string">"author"</span>: <span class="string">"J.K. Rowling"</span>,
+  <span class="string">"isbn"</span>: <span class="string">"978-0439708180"</span>,
+  <span class="string">"series"</span>: <span class="string">"Harry Potter"</span>,
+  <span class="string">"volume"</span>: <span class="number">1</span>,
+  <span class="string">"ai_recommendation"</span>: {...}  <span class="comment">// Ajouté plus tard sans migration!</span>
+}</code></pre>
+                </div>
+
+                <!-- Reason 2: Embedded Documents -->
+                <div class="card">
+                    <div class="card-header">2️⃣ Documents Embarqués (Embedded Documents)</div>
+                    <p>L'approche NoSQL permet de <strong>dénormaliser</strong> les données en embarquant les
+                        informations liées.</p>
+
+                    <p><strong>Au lieu de 3 tables liées (SQL)</strong> : users, books, loans</p>
+                    <p><strong>MongoDB stocke directement l'historique dans le document utilisateur :</strong></p>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Document Utilisateur</span>
+                    </div>
+                    <pre><code>{
+  <span class="string">"_id"</span>: ObjectId(<span class="string">"..."</span>),
+  <span class="string">"username"</span>: <span class="string">"Andro"</span>,
+  <span class="string">"loans"</span>: [
+    {
+      <span class="string">"loan_id"</span>: ObjectId(<span class="string">"..."</span>),
+      <span class="string">"book_snapshot"</span>: {
+        <span class="string">"title"</span>: <span class="string">"1984"</span>,
+        <span class="string">"author"</span>: <span class="string">"George Orwell"</span>,
+        <span class="string">"cover_image"</span>: <span class="string">"..."</span>
+      },
+      <span class="string">"borrow_date"</span>: ISODate(<span class="string">"2024-01-15"</span>),
+      <span class="string">"status"</span>: <span class="string">"Returned"</span>
+    }
+  ]
+}</code></pre>
+
+                    <div class="card-grid">
+                        <div class="badge badge-success">✅ 1 seule requête pour tout l'historique</div>
+                        <div class="badge badge-success">✅ Pas de JOIN coûteux</div>
+                        <div class="badge badge-success">✅ Snapshot des données conservé</div>
+                        <div class="badge badge-success">✅ Opérations atomiques</div>
+                    </div>
+                </div>
+
+                <!-- Reason 3: Read Performance -->
+                <div class="card">
+                    <div class="card-header">3️⃣ Performance de Lecture Optimale</div>
+                    <p>Notre application est <strong>read-heavy</strong> (beaucoup de lectures) :</p>
+                    <ul class="feature-list">
+                        <li>Les utilisateurs parcourent souvent le catalogue</li>
+                        <li>Consultation fréquente de l'historique</li>
+                        <li>Affichage du tableau de bord admin</li>
+                    </ul>
+
+                    <p><strong>MongoDB excelle dans ce cas :</strong></p>
+                    <div class="card-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <p>Pas de joins multiples</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <p>Lecture rapide en un seul accès</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <p>Indexation efficace</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reason 4: Aggregations -->
+                <div class="card">
+                    <div class="card-header">4️⃣ Agrégations Puissantes</div>
+                    <p>MongoDB Aggregation Pipeline permet des analyses complexes :</p>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Aggregation Pipeline</span>
+                    </div>
+                    <pre><code><span class="comment">// Statistique : Emprunts par catégorie</span>
+db.users.<span class="function">aggregate</span>([
+  { <span class="keyword">$unwind</span>: <span class="string">"$loans"</span> },
+  { 
+    <span class="keyword">$group</span>: { 
+      _id: <span class="string">"$loans.book_snapshot.category"</span>, 
+      count: { <span class="keyword">$sum</span>: <span class="number">1</span> } 
+    }
+  },
+  { <span class="keyword">$sort</span>: { count: <span class="number">-1</span> } }
+])</code></pre>
+
+                    <p><strong>Utilisé dans notre projet pour :</strong></p>
+                    <ul class="feature-list">
+                        <li>Graphiques du dashboard (Chart.js)</li>
+                        <li>Statistiques en temps réel</li>
+                        <li>Rapports analytiques</li>
+                    </ul>
+                </div>
+
+                <!-- Reason 5: Scalability -->
+                <div class="card">
+                    <div class="card-header">5️⃣ Scalabilité Horizontale</div>
+                    <p>Si la bibliothèque grandit (100k+ utilisateurs) :</p>
+                    <ul class="feature-list">
+                        <li>MongoDB peut facilement scale avec <strong>sharding</strong></li>
+                        <li>Distribution automatique des données</li>
+                        <li>Pas besoin de refactoring majeur</li>
+                        <li>Réplication native pour haute disponibilité</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Comparison Table -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Comparaison SQL vs NoSQL
+                </h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Critère</th>
+                            <th>SQL (PostgreSQL/MySQL)</th>
+                            <th>NoSQL (MongoDB)</th>
+                            <th>Gagnant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Joins</strong></td>
+                            <td>Requiert 3-4 joins pour historique complet</td>
+                            <td>Embedded documents, 1 requête</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Flexibilité</strong></td>
+                            <td>Migrations de schéma rigides</td>
+                            <td>Schema-less, évolutif</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance lecture</strong></td>
+                            <td>Moyenne (joins)</td>
+                            <td>Excellente (embedded)</td>
+                            <td class="winner">✅ NoSQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transactions</strong></td>
+                            <td>ACID complet</td>
+                            <td>ACID sur document unique</td>
+                            <td class="winner">✅ SQL</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Complexité</strong></td>
+                            <td>Normalisé (3NF)</td>
+                            <td>Dénormalisé</td>
+                            <td class="winner">✅ NoSQL (notre cas)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analytics</strong></td>
+                            <td>SQL puissant</td>
+                            <td>Aggregation Pipeline</td>
+                            <td class="winner">≈ Égalité</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Why MongoDB for Library -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Pourquoi MongoDB est Idéal pour une Bibliothèque
+                </h2>
+
+                <div class="card-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+                        <h3 class="feature-title">Modèle Naturel</h3>
+                        <p>Un livre est un "document" - métaphore parfaite !</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📜</div>
+                        <h3 class="feature-title">Historique Embarqué</h3>
+                        <p>Chaque utilisateur garde son historique de lecture complet</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h3 class="feature-title">Snapshots Immuables</h3>
+                        <p>Même si un livre est modifié/supprimé, l'historique conserve les infos originales</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3 class="feature-title">Évolutivité</h3>
+                        <p>Facile d'ajouter recommandations IA, notes, commentaires</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Simplicité</h3>
+                        <p>Pas besoin de dizaines de tables pour des relations simples</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Performance</h3>
+                        <p>Lecture optimisée pour l'expérience utilisateur</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Navigation -->
+            <section class="section">
+                <div class="flex flex-center gap-2">
+                    <a href="index.html" class="btn btn-outline">← Accueil</a>
+                    <a href="schemas.html" class="btn btn-primary">Suivant: Schémas →</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>

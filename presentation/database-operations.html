@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opérations CRUD - Ktabna</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation Sidebar -->
+    <nav class="nav-sidebar">
+        <div class="nav-logo">
+            📚 Ktabna
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    Accueil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="nosql-justification.html" class="nav-link">
+                    <span class="nav-icon">💡</span>
+                    Pourquoi NoSQL
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="schemas.html" class="nav-link">
+                    <span class="nav-icon">🗄️</span>
+                    Schémas BDD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="database-operations.html" class="nav-link active">
+                    <span class="nav-icon">⚙️</span>
+                    Opérations CRUD
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="application.html" class="nav-link">
+                    <span class="nav-icon">🖥️</span>
+                    Application
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <h1 class="hero-title">⚙️ Opérations sur la Base de Données</h1>
+                <p class="hero-subtitle">Exemples CRUD avec MongoDB</p>
+                <div class="flex flex-center gap-2">
+                    <span class="badge badge-success">CREATE</span>
+                    <span class="badge badge-primary">READ</span>
+                    <span class="badge badge-warning">UPDATE</span>
+                    <span class="badge badge-danger">DELETE</span>
+                </div>
+            </section>
+
+            <!-- Collections Info -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📝</span>
+                    Collections MongoDB
+                </h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Collection: users</h3>
+                        <p>Utilisateurs avec emprunts embarqués, badges et statistiques</p>
+                    </div>
+                    <div class="card">
+                        <h3>Collection: books</h3>
+                        <p>Livres avec emprunts actuels et historique embarqués</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CREATE Operations -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">➕</span>
+                    Opérations d'Insertion (CREATE)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Insérer un Nouveau Livre</div>
+
+                    <h4>MongoDB Query</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript</span>
+                    </div>
+                    <pre><code>db.books.<span class="function">insertOne</span>({
+  title: <span class="string">"1984"</span>,
+  author: <span class="string">"George Orwell"</span>,
+  category: <span class="string">"Classic"</span>,
+  description: <span class="string">"Dystopian novel about totalitarianism"</span>,
+  cover_image: <span class="string">"https://example.com/1984.jpg"</span>,
+  total_copies: <span class="number">5</span>,
+  available_copies: <span class="number">5</span>,
+  added_at: <span class="keyword">new</span> Date(),
+  current_loans: [],
+  loan_history: []
+})</code></pre>
+
+                    <h4>Implémentation Python (PyMongo)</h4>
+                    <div class="code-header">
+                        <span class="code-language">Python</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">add_book</span>(title, author, category, description, cover_image, total_copies):
+    db = get_db()
+    book = {
+        <span class="string">"title"</span>: title,
+        <span class="string">"author"</span>: author,
+        <span class="string">"category"</span>: category,
+        <span class="string">"description"</span>: description,
+        <span class="string">"cover_image"</span>: cover_image,
+        <span class="string">"total_copies"</span>: <span class="function">int</span>(total_copies),
+        <span class="string">"available_copies"</span>: <span class="function">int</span>(total_copies),
+        <span class="string">"added_at"</span>: datetime.utcnow(),
+        <span class="string">"current_loans"</span>: [],
+        <span class="string">"loan_history"</span>: []
+    }
+    result = db.books.insert_one(book)
+    <span class="keyword">return</span> result.inserted_id</code></pre>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Créer un Utilisateur</div>
+
+                    <h4>MongoDB Query</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript</span>
+                    </div>
+                    <pre><code>db.users.<span class="function">insertOne</span>({
+  username: <span class="string">"Andro"</span>,
+  email: <span class="string">"andro@library.com"</span>,
+  password: <span class="string">"$2b$12$hashed..."</span>,  <span class="comment">// Hashed password</span>
+  role: <span class="string">"user"</span>,
+  created_at: <span class="keyword">new</span> Date(),
+  books_read: <span class="number">0</span>,
+  categories_explored: [],
+  badges: [],
+  loans: []
+})</code></pre>
+
+                    <h4>Implémentation Python</h4>
+                    <div class="code-header">
+                        <span class="code-language">Python</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">create_user</span>(username, email, password, role=<span class="string">'user'</span>):
+    db = get_db()
+    user = {
+        <span class="string">"username"</span>: username,
+        <span class="string">"email"</span>: email,
+        <span class="string">"password"</span>: generate_password_hash(password),  <span class="comment"># Sécurité!</span>
+        <span class="string">"role"</span>: role,
+        <span class="string">"created_at"</span>: datetime.utcnow(),
+        <span class="string">"books_read"</span>: <span class="number">0</span>,
+        <span class="string">"categories_explored"</span>: [],
+        <span class="string">"badges"</span>: [],
+        <span class="string">"loans"</span>: []
+    }
+    result = db.users.insert_one(user)
+    <span class="keyword">return</span> result.inserted_id</code></pre>
+                </div>
+            </section>
+
+            <!-- READ Operations -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🔍</span>
+                    Opérations de Lecture (READ)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Recherche de Livres (Case-Insensitive)</div>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - MongoDB Query</span>
+                    </div>
+                    <pre><code>db.books.<span class="function">find</span>({
+  <span class="keyword">$or</span>: [
+    { title: { <span class="keyword">$regex</span>: <span class="string">"orwell"</span>, <span class="keyword">$options</span>: <span class="string">"i"</span> } },
+    { author: { <span class="keyword">$regex</span>: <span class="string">"orwell"</span>, <span class="keyword">$options</span>: <span class="string">"i"</span> } },
+    { category: { <span class="keyword">$regex</span>: <span class="string">"orwell"</span>, <span class="keyword">$options</span>: <span class="string">"i"</span> } }
+  ]
+})</code></pre>
+
+                    <div class="code-header">
+                        <span class="code-language">Python - PyMongo</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">search_books</span>(query):
+    db = get_db()
+    books = db.books.find({
+        <span class="string">"$or"</span>: [
+            {<span class="string">"title"</span>: {<span class="string">"$regex"</span>: query, <span class="string">"$options"</span>: <span class="string">"i"</span>}},
+            {<span class="string">"author"</span>: {<span class="string">"$regex"</span>: query, <span class="string">"$options"</span>: <span class="string">"i"</span>}},
+            {<span class="string">"category"</span>: {<span class="string">"$regex"</span>: query, <span class="string">"$options"</span>: <span class="string">"i"</span>}}
+        ]
+    })
+    <span class="keyword">return</span> <span class="function">list</span>(books)</code></pre>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Obtenir l'Historique d'un Utilisateur</div>
+                    <p><strong>Simple lecture - pas de JOIN!</strong></p>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - MongoDB</span>
+                    </div>
+                    <pre><code><span class="comment">// UNE SEULE requête!</span>
+db.users.<span class="function">findOne</span>({ _id: ObjectId(<span class="string">"user_id"</span>) })</code></pre>
+
+                    <div class="code-header">
+                        <span class="code-language">Python</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">get_user_loans</span>(user_id):
+    db = get_db()
+    user = db.users.find_one({<span class="string">"_id"</span>: ObjectId(user_id)})
+    loans = user.get(<span class="string">'loans'</span>, [])
+    <span class="comment"># Trier par date (plus récent d'abord)</span>
+    <span class="keyword">return</span> <span class="function">sorted</span>(loans, key=<span class="keyword">lambda</span> x: x[<span class="string">'borrow_date'</span>], reverse=<span class="keyword">True</span>)</code></pre>
+
+                    <div class="badge badge-success">✅ Toutes les infos en 1 requête</div>
+                </div>
+            </section>
+
+            <!-- UPDATE Operations -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">✏️</span>
+                    Opérations de Mise à Jour (UPDATE)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Créer un Emprunt (Opération Complexe)</div>
+                    <p>Cette opération met à jour <strong>2 documents</strong> de manière atomique.</p>
+
+                    <h4>Étape 1 : Ajouter l'emprunt à l'utilisateur</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Opérateur $push et $inc</span>
+                    </div>
+                    <pre><code>db.users.<span class="function">updateOne</span>(
+  { _id: ObjectId(<span class="string">"user_id"</span>) },
+  {
+    <span class="keyword">$push</span>: {
+      loans: {
+        loan_id: <span class="keyword">new</span> ObjectId(),
+        book_id: ObjectId(<span class="string">"book_id"</span>),
+        book_snapshot: {
+          title: <span class="string">"1984"</span>,
+          author: <span class="string">"George Orwell"</span>,
+          category: <span class="string">"Classic"</span>,
+          cover_image: <span class="string">"..."</span>
+        },
+        borrow_date: <span class="keyword">new</span> Date(),
+        deadline: <span class="keyword">new</span> Date(Date.now() + <span class="number">14</span>*<span class="number">24</span>*<span class="number">60</span>*<span class="number">60</span>*<span class="number">1000</span>),
+        return_date: <span class="keyword">null</span>,
+        status: <span class="string">"Borrowed"</span>
+      }
+    },
+    <span class="keyword">$inc</span>: { books_read: <span class="number">1</span> }  <span class="comment">// Incrémenter compteur</span>
+  }
+)</code></pre>
+
+                    <h4>Étape 2 : Mettre à jour le livre</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript</span>
+                    </div>
+                    <pre><code>db.books.<span class="function">updateOne</span>(
+  { _id: ObjectId(<span class="string">"book_id"</span>) },
+  {
+    <span class="keyword">$push</span>: {
+      current_loans: {
+        loan_id: loan_id,
+        user_id: user_id,
+        user_name: <span class="string">"Andro"</span>,
+        borrow_date: <span class="keyword">new</span> Date(),
+        deadline: <span class="keyword">new</span> Date(...),
+        status: <span class="string">"Borrowed"</span>
+      }
+    },
+    <span class="keyword">$inc</span>: { available_copies: <span class="number">-1</span> }  <span class="comment">// Diminuer stock</span>
+  }
+)</code></pre>
+
+                    <div class="code-header">
+                        <span class="code-language">Python - Implémentation Complète</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">create_loan</span>(user_id, book_id, deadline):
+    db = get_db()
+    
+    <span class="comment"># Vérifier disponibilité</span>
+    book = db.books.find_one({
+        <span class="string">"_id"</span>: ObjectId(book_id),
+        <span class="string">"available_copies"</span>: {<span class="string">"$gt"</span>: <span class="number">0</span>}
+    })
+    
+    <span class="keyword">if</span> <span class="keyword">not</span> book:
+        <span class="keyword">return</span> <span class="keyword">False</span>, <span class="string">"Book not available"</span>
+    
+    <span class="comment"># ID unique pour le prêt</span>
+    loan_id = ObjectId()
+    
+    <span class="comment"># Ajouter à l'utilisateur</span>
+    db.users.update_one(
+        {<span class="string">"_id"</span>: ObjectId(user_id)},
+        {
+            <span class="string">"$push"</span>: {
+                <span class="string">"loans"</span>: {
+                    <span class="string">"loan_id"</span>: loan_id,
+                    <span class="string">"book_id"</span>: book[<span class="string">"_id"</span>],
+                    <span class="string">"book_snapshot"</span>: {...},
+                    <span class="string">"borrow_date"</span>: datetime.utcnow(),
+                    <span class="string">"deadline"</span>: deadline,
+                    <span class="string">"status"</span>: <span class="string">"Borrowed"</span>
+                }
+            },
+            <span class="string">"$inc"</span>: {<span class="string">"books_read"</span>: <span class="number">1</span>}
+        }
+    )
+    
+    <span class="comment"># Mettre à jour le livre</span>
+    db.books.update_one(
+        {<span class="string">"_id"</span>: book[<span class="string">"_id"</span>]},
+        {
+            <span class="string">"$push"</span>: {<span class="string">"current_loans"</span>: {...}},
+            <span class="string">"$inc"</span>: {<span class="string">"available_copies"</span>: <span class="number">-1</span>}
+        }
+    )
+    
+    <span class="keyword">return</span> <span class="keyword">True</span>, <span class="string">"Loan created successfully"</span></code></pre>
+
+                    <div class="card-grid">
+                        <div class="badge badge-success">✅ 2 opérations atomiques</div>
+                        <div class="badge badge-success">✅ Pas de transaction complexe</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Modifier un Livre</div>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Opérateur $set</span>
+                    </div>
+                    <pre><code>db.books.<span class="function">updateOne</span>(
+  { _id: ObjectId(<span class="string">"book_id"</span>) },
+  { 
+    <span class="keyword">$set</span>: { 
+      title: <span class="string">"Nineteen Eighty-Four"</span>,
+      total_copies: <span class="number">10</span>
+    } 
+  }
+)</code></pre>
+                </div>
+            </section>
+
+            <!-- DELETE Operations -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🗑️</span>
+                    Opérations de Suppression (DELETE)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Retourner un Livre</div>
+
+                    <h4>Étape 1 : Mettre à jour le statut dans l'array de l'utilisateur</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Positional Operator $</span>
+                    </div>
+                    <pre><code>db.users.<span class="function">updateOne</span>(
+  { <span class="string">"loans.loan_id"</span>: ObjectId(<span class="string">"loan_id"</span>) },
+  {
+    <span class="keyword">$set</span>: {
+      <span class="string">"loans.$.return_date"</span>: <span class="keyword">new</span> Date(),  <span class="comment">// $ = positional operator</span>
+      <span class="string">"loans.$.status"</span>: <span class="string">"Returned"</span>
+    }
+  }
+)</code></pre>
+
+                    <h4>Étape 2 : Déplacer de current_loans vers loan_history</h4>
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Opérateurs $pull et $push</span>
+                    </div>
+                    <pre><code>db.books.<span class="function">updateOne</span>(
+  { _id: ObjectId(<span class="string">"book_id"</span>) },
+  {
+    <span class="keyword">$pull</span>: { current_loans: { loan_id: ObjectId(<span class="string">"loan_id"</span>) } },
+    <span class="keyword">$push</span>: { 
+      loan_history: {
+        loan_id: ObjectId(<span class="string">"loan_id"</span>),
+        user_name: <span class="string">"Andro"</span>,
+        borrow_date: ISODate(<span class="string">"..."</span>),
+        return_date: <span class="keyword">new</span> Date(),
+        status: <span class="string">"Returned"</span>
+      }
+    },
+    <span class="keyword">$inc</span>: { available_copies: <span class="number">1</span> }  <span class="comment">// Remettre en stock</span>
+  }
+)</code></pre>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Supprimer un Livre</div>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript</span>
+                    </div>
+                    <pre><code>db.books.<span class="function">deleteOne</span>({ _id: ObjectId(<span class="string">"book_id"</span>) })</code></pre>
+
+                    <p><strong>Note importante :</strong> L'historique des utilisateurs conserve le
+                        <code>book_snapshot</code>, donc les données ne sont pas perdues ! 📸</p>
+                </div>
+            </section>
+
+            <!-- Aggregations -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Requêtes d'Agrégation (Analytics)
+                </h2>
+
+                <div class="card">
+                    <div class="card-header">Nombre d'Emprunts par Catégorie</div>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Aggregation Pipeline</span>
+                    </div>
+                    <pre><code>db.users.<span class="function">aggregate</span>([
+  <span class="comment">// Dérouler le tableau loans</span>
+  { <span class="keyword">$unwind</span>: <span class="string">"$loans"</span> },
+  
+  <span class="comment">// Grouper par catégorie</span>
+  {
+    <span class="keyword">$group</span>: {
+      _id: <span class="string">"$loans.book_snapshot.category"</span>,
+      count: { <span class="keyword">$sum</span>: <span class="number">1</span> }
+    }
+  },
+  
+  <span class="comment">// Trier par popularité</span>
+  { <span class="keyword">$sort</span>: { count: <span class="number">-1</span> } }
+])</code></pre>
+
+                    <h4>Résultat</h4>
+                    <div class="code-header">
+                        <span class="code-language">JSON</span>
+                    </div>
+                    <pre><code>[
+  { <span class="string">"_id"</span>: <span class="string">"Fantasy"</span>, <span class="string">"count"</span>: <span class="number">25</span> },
+  { <span class="string">"_id"</span>: <span class="string">"Classic"</span>, <span class="string">"count"</span>: <span class="number">18</span> },
+  { <span class="string">"_id"</span>: <span class="string">"Science Fiction"</span>, <span class="string">"count"</span>: <span class="number">12</span> }
+]</code></pre>
+
+                    <div class="code-header">
+                        <span class="code-language">Python</span>
+                    </div>
+                    <pre><code><span class="keyword">def</span> <span class="function">get_loans_by_category</span>():
+    db = get_db()
+    pipeline = [
+        {<span class="string">"$unwind"</span>: <span class="string">"$loans"</span>},
+        {
+            <span class="string">"$group"</span>: {
+                <span class="string">"_id"</span>: <span class="string">"$loans.book_snapshot.category"</span>,
+                <span class="string">"count"</span>: {<span class="string">"$sum"</span>: <span class="number">1</span>}
+            }
+        },
+        {<span class="string">"$sort"</span>: {<span class="string">"count"</span>: <span class="number">-1</span>}}
+    ]
+    <span class="keyword">return</span> <span class="function">list</span>(db.users.aggregate(pipeline))</code></pre>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Emprunts en Retard</div>
+
+                    <div class="code-header">
+                        <span class="code-language">JavaScript - Aggregation avec $match</span>
+                    </div>
+                    <pre><code>db.users.<span class="function">aggregate</span>([
+  { <span class="keyword">$unwind</span>: <span class="string">"$loans"</span> },
+  {
+    <span class="keyword">$match</span>: {
+      <span class="string">"loans.status"</span>: { <span class="keyword">$in</span>: [<span class="string">"Borrowed"</span>, <span class="string">"Late"</span>] },
+      <span class="string">"loans.deadline"</span>: { <span class="keyword">$lt</span>: <span class="keyword">new</span> Date() }  <span class="comment">// Deadline dépassée</span>
+    }
+  },
+  {
+    <span class="keyword">$project</span>: {
+      username: <span class="number">1</span>,
+      email: <span class="number">1</span>,
+      loan_id: <span class="string">"$loans.loan_id"</span>,
+      book_title: <span class="string">"$loans.book_snapshot.title"</span>,
+      deadline: <span class="string">"$loans.deadline"</span>
+    }
+  }
+])</code></pre>
+                </div>
+            </section>
+
+            <!-- MongoDB Operators -->
+            <section class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🔧</span>
+                    Opérateurs MongoDB Utilisés
+                </h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Opérateur</th>
+                            <th>Usage</th>
+                            <th>Exemple</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>$push</code></td>
+                            <td>Ajouter à un array</td>
+                            <td><code>$push: { loans: {...} }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$pull</code></td>
+                            <td>Retirer d'un array</td>
+                            <td><code>$pull: { current_loans: {...} }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$inc</code></td>
+                            <td>Incrémenter/Décrémenter</td>
+                            <td><code>$inc: { available_copies: -1 }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$set</code></td>
+                            <td>Modifier un champ</td>
+                            <td><code>$set: { status: "Late" }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$regex</code></td>
+                            <td>Recherche textuelle</td>
+                            <td><code>{ title: { $regex: "...", $options: "i" } }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$</code></td>
+                            <td>Positional operator</td>
+                            <td><code>$set: { "loans.$.status": "..." }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$unwind</code></td>
+                            <td>Dérouler un array</td>
+                            <td><code>{ $unwind: "$loans" }</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>$group</code></td>
+                            <td>Agréger des données</td>
+                            <td><code>{ $group: { _id: "...", count: {...} } }</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Navigation -->
+            <section class="section">
+                <div class="flex flex-center gap-2">
+                    <a href="schemas.html" class="btn btn-outline">← Schémas</a>
+                    <a href="application.html" class="btn btn-primary">Suivant: Application →</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>
