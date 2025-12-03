@@ -1,0 +1,112 @@
+/* RTL (Right-to-Left) Styles for Arabic Language */
+
+/* Base RTL direction */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Navigation adjustments */
+[dir="rtl"] nav ul {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .nav-link {
+    margin-right: 0 !important;
+    margin-left: 1rem;
+}
+
+/* Flex containers */
+[dir="rtl"] .flex-between {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] header {
+    flex-direction: row-reverse;
+}
+
+/* Forms */
+[dir="rtl"] input,
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+    text-align: right;
+}
+
+[dir="rtl"] label {
+    text-align: right;
+}
+
+/* Buttons */
+[dir="rtl"] .button i {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+/* Stats grid */
+[dir="rtl"] .stats-grid {
+    direction: ltr;
+    /* Keep grid left-to-right */
+}
+
+/* Book cards - center content */
+[dir="rtl"] .book-card,
+[dir="rtl"] .stat-card {
+    text-align: center;
+}
+
+/* Tables */
+[dir="rtl"] table {
+    direction: rtl;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+    text-align: right;
+}
+
+/* Margins and paddings reversal */
+[dir="rtl"] .mt-4 {
+    margin-top: 1.5rem;
+}
+
+/* Flash messages */
+[dir="rtl"] .flashes li {
+    text-align: right;
+}
+
+/* Hero section */
+[dir="rtl"] .hero-section {
+    text-align: center;
+    /* Keep hero centered */
+}
+
+/* Language switcher styling */
+.language-switcher {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.7rem 1.3rem;
+    background: #f3f4f6;
+    border-radius: 10px;
+}
+
+.language-switcher a {
+    text-decoration: none;
+    padding: 0.5rem;
+    color: var(--text-main);
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.language-switcher a:hover {
+    color: var(--primary-color);
+}
+
+.language-switcher a.active {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.language-switcher .separator {
+    color: #E5E7EB;
+}

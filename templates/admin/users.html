@@ -7,17 +7,17 @@
 
 <!-- User Stats -->
 <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 2rem;">
-    <div class="stat-card">
-        <span class="stat-number">{{ users|length }}</span>
-        <span class="stat-label">Total Users</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); border: none;">
+        <span class="stat-number" style="color: white;">{{ users|length }}</span>
+        <span class="stat-label" style="color: rgba(255,255,255,0.9);">Total Users</span>
     </div>
-    <div class="stat-card">
-        <span class="stat-number">{{ users|selectattr('role', 'eq', 'user')|list|length }}</span>
-        <span class="stat-label">Members</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); border: none;">
+        <span class="stat-number" style="color: white;">{{ users|selectattr('role', 'eq', 'user')|list|length }}</span>
+        <span class="stat-label" style="color: rgba(255,255,255,0.9);">Members</span>
     </div>
-    <div class="stat-card">
-        <span class="stat-number">{{ users|selectattr('role', 'eq', 'admin')|list|length }}</span>
-        <span class="stat-label">Admins</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); border: none;">
+        <span class="stat-number" style="color: white;">{{ users|selectattr('role', 'eq', 'admin')|list|length }}</span>
+        <span class="stat-label" style="color: rgba(255,255,255,0.9);">Admins</span>
     </div>
 </div>
 

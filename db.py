@@ -5,7 +5,8 @@ from config import Config
 def get_db():
     if 'db' not in g:
         client = MongoClient(Config.MONGO_URI)
-        g.db = client['library_db']  
+        db_name = Config.get_db_name()
+        g.db = client[db_name]
     return g.db
 
 def close_db(e=None):

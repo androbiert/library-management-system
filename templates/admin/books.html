@@ -7,17 +7,19 @@
 
 <!-- Books Stats -->
 <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: 2rem;">
-    <div class="stat-card">
-        <span class="stat-number">{{ books|length }}</span>
-        <span class="stat-label">Total Books</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); border: none;">
+        <span class="stat-number" style="color: white;">{{ books|length }}</span>
+        <span class="stat-label" style="color: rgba(255,255,255,0.9);">Total Books</span>
     </div>
-    <div class="stat-card">
-        <span class="stat-number">{{ books|selectattr('available_copies', 'gt', 0)|list|length }}</span>
-        <span class="stat-label">In Stock</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); border: none;">
+        <span class="stat-number" style="color: white;">{{ books|selectattr('available_copies', 'gt', 0)|list|length
+            }}</span>
+        <span class="stat-label" style="color: rgba(255,255,255,0.9);">In Stock</span>
     </div>
-    <div class="stat-card">
-        <span class="stat-number">{{ books|selectattr('available_copies', 'eq', 0)|list|length }}</span>
-        <span class="stat-label">Out of Stock</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); border: none;">
+        <span class="stat-number" style="color: white;">{{ books|selectattr('available_copies', 'eq', 0)|list|length
+            }}</span>
+        <span class="stat-label" style="color: rgba(255,255,255,0.9);">Out of Stock</span>
     </div>
 </div>
 

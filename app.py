@@ -6,12 +6,27 @@ from werkzeug.security import check_password_hash
 from functools import wraps
 from datetime import datetime
 import re
+from flask_babel import Babel, gettext as _
+from flask import Flask, request, session
 
 app = Flask(__name__)
-app.config['APP_NAME'] = "Ktabna"
-app.config.from_object(Config)
 
-init_app(app)
+app.config['SECRET_KEY'] = "your-secret-key"
+app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+app.config['BABEL_SUPPORTED_LOCALES'] = ['en', 'fr', 'ar']
+
+babel = Babel()
+
+def select_locale():
+    # إذا قام المستخدم بتغيير اللغة يدوياً
+    if 'language' in session:
+        return session['language']
+
+    # غير ذلك → اختر حسب Accept-Language أو lang=? في URL
+    return request.args.get('lang') or \
+           request.accept_languages.best_match(['ar', 'en', 'fr']) or 'en'
+
+babel.init_app(app, locale_selector=select_locale)
 
 # --- Decorators ---
 
@@ -94,6 +109,14 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+@app.route('/set_language/<language>')
+def set_language(language):
+    """Language switcher route"""
+    if language in ['en', 'ar']:
+        session['language'] = language
+    # Redirect back to the referring page or index
+    return redirect(request.referrer or url_for('index'))
 
 # --- Main Routes ---
 
