@@ -1,69 +1,66 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- Hero Section with Gradient Background -->
+<!-- Hero Section with Minimalist Background -->
 <div
-    style="position: relative; text-align: center; padding: 5rem 2rem; margin: -2rem -2rem 3rem; background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); border-radius: 0 0 30px 30px; overflow: hidden;">
+    style="position: relative; text-align: center; padding: 5rem 2rem; margin: -2rem -2rem 3rem; background: #ffffff; border-bottom: 1px solid #e5e7eb; overflow: hidden;">
     <!-- Animated Background Elements -->
     <div
-        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
+        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23000000&quot; fill-opacity=&quot;1&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
     </div>
 
     <div style="position: relative; z-index: 1;">
-        <div style="font-size: 6rem; margin-bottom: 1.5rem; color: white; animation: float 3s ease-in-out infinite;">
+        <div style="font-size: 6rem; margin-bottom: 1.5rem; color: #111827; animation: float 3s ease-in-out infinite;">
             <i class="fas fa-book-open"></i>
         </div>
 
-        <h1
-            style="font-size: 4rem; margin-bottom: 1rem; color: white; font-weight: 900; text-shadow: 0 4px 20px rgba(0,0,0,0.2); letter-spacing: -1px;">
-            LibraryHub
+        <h1 style="font-size: 4rem; margin-bottom: 1rem; color: #111827; font-weight: 900; letter-spacing: -1px;">
+            KiTABI
+            
         </h1>
 
         <p
-            style="font-size: 1.5rem; color: rgba(255,255,255,0.95); margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto; font-weight: 300; line-height: 1.6; min-height: 90px;">
+            style="font-size: 1.5rem; color: #4b5563; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto; font-weight: 300; line-height: 1.6; min-height: 90px;">
             Your gateway to unlimited knowledge and endless adventures.<br>
             <strong class="typed-container">
                 <span id="typed-text"></span><span class="cursor">|</span>
             </strong>
         </p>
 
-        <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+        <!-- <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
             <a href="{{ url_for('login') }}" class="button"
-                style="background: white; color: #6366F1; font-size: 1.2rem; padding: 1.25rem 3rem; box-shadow: 0 8px 25px rgba(0,0,0,0.3); font-weight: 700; border: none;">
+                style="background: #111827; color: white; font-size: 1.2rem; padding: 1.25rem 3rem; box-shadow: none; font-weight: 700; border: none;">
                 <i class="fas fa-sign-in-alt"></i> Login
             </a>
-            <a href="{{ url_for('register') }}" class="button"
-                style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: white; font-size: 1.2rem; padding: 1.25rem 3rem; box-shadow: 0 8px 25px rgba(0,0,0,0.2); font-weight: 700; border: 2px solid rgba(255,255,255,0.3);">
+            <a href="{{ url_for('register') }}" class="button button-outline"
+                style="font-size: 1.2rem; padding: 1.25rem 3rem; font-weight: 700;">
                 <i class="fas fa-user-plus"></i> Get Started Free
             </a>
-        </div>
+        </div> -->
     </div>
 </div>
 
 <!-- Quick Stats -->
 <div class="stats-grid" style="margin-bottom: 4rem;">
-    <div class="stat-card"
-        style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); color: white; border: none;">
-        <span class="stat-number" style="color: white;">{{ total_books }}</span>
-        <span class="stat-label" style="color: rgba(255,255,255,0.9);"><i class="fas fa-book"></i> Books
+    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
+        <span class="stat-number" style="color: #ffffff;">{{ total_books }}</span>
+        <span class="stat-label" style="color: #ffffff;"><i class="fas fa-book"></i> Books
             Available</span>
     </div>
-    <div class="stat-card"
-        style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%); color: white; border: none;">
-        <span class="stat-number" style="color: white;">{{ total_categories }}</span>
-        <span class="stat-label" style="color: rgba(255,255,255,0.9);"><i class="fas fa-tags"></i> Categories</span>
+    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
+        <span class="stat-number" style="color: #ffffff;">{{ total_categories }}</span>
+        <span class="stat-label" style="color: #ffffff;"><i class="fas fa-tags"></i> Categories</span>
     </div>
-    <div class="stat-card"
-        style="background: linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%); color: white; border: none;">
-        <span class="stat-number" style="color: white;">{{ active_members }}</span>
-        <span class="stat-label" style="color: rgba(255,255,255,0.9);"><i class="fas fa-users"></i> Active
+    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
+        <span class="stat-number" style="color: #ffffff;">{{ active_members }}</span>
+        <span class="stat-label" style="color: #ffffff;"><i class="fas fa-users"></i> Active
             Members</span>
     </div>
 </div>
 
 <!-- Featured Books -->
 <h2 style="text-align: center; color: #1F2937; margin-bottom: 3rem; font-size: 2.8rem; font-weight: 900;">
-    <i class="fas fa-fire" style="color: #EC4899;"></i> Featured Books
+    <i class="fas fa-fire" style="color: #111827;"></i> Featured Books
 </h2>
 
 {% if books %}
@@ -77,7 +74,7 @@
                 style="width: 100%; height: 210px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">
             {% else %}
             <div
-                style="width: 100%; height: 210px; background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; border-radius: 8px; color: white; font-size: 4rem;">
+                style="width: 100%; height: 210px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; border-radius: 8px; color: #9ca3af; font-size: 4rem;">
                 <i class="fas fa-book"></i>
             </div>
             {% endif %}
@@ -100,9 +97,9 @@
                 {% endif %}
 
                 <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; text-align: center;">
-                    <span style="color: #6366F1; font-size: 0.85rem; font-weight: 600;">
-                        <i class="fas fa-magic"></i> Voir recommandation IA →
-                    </span>
+                    <button class="button button-outline" style="width: 100%; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                        <i class="fas fa-info-circle"></i> Details
+                    </button>
                 </div>
             </div>
         </div>
@@ -112,7 +109,7 @@
 
 <div style="text-align: center; margin-top: 3rem;">
     <a href="{{ url_for('register') }}" class="button"
-        style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); font-size: 1.3rem; padding: 1.25rem 3rem; box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4); font-weight: 700;">
+        style="background: #111827; color: white; font-size: 1.3rem; padding: 1.25rem 3rem; box-shadow: none; font-weight: 700;">
         <i class="fas fa-rocket"></i> Join Now to Browse All Books
     </a>
 </div>
@@ -126,17 +123,16 @@
 {% endif %}
 
 <!-- How It Works Section -->
-<div
-    style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%); border-radius: 30px; padding: 4rem 2rem; margin-top: 5rem;">
+<div style="background: #f9fafb; border-radius: 30px; padding: 4rem 2rem; margin-top: 5rem;">
     <h2 style="text-align: center; margin-bottom: 4rem; color: #1F2937; font-size: 2.8rem; font-weight: 900;">
-        <i class="fas fa-magic" style="color: #6366F1;"></i> How It Works
+        <i class="fas fa-magic" style="color: #111827;"></i> How It Works
     </h2>
 
     <div
         style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; max-width: 1000px; margin: 0 auto;">
         <div class="step-card">
             <div class="step-number">1</div>
-            <div class="step-icon" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">
+            <div class="step-icon" style="background: #111827; color: white;">
                 <i class="fas fa-user-plus"></i>
             </div>
             <h3>Create Account</h3>
@@ -145,7 +141,7 @@
 
         <div class="step-card">
             <div class="step-number">2</div>
-            <div class="step-icon" style="background: linear-gradient(135deg, #EC4899 0%, #F472B6 100%);">
+            <div class="step-icon" style="background: #111827; color: white;">
                 <i class="fas fa-search"></i>
             </div>
             <h3>Find Books</h3>
@@ -154,7 +150,7 @@
 
         <div class="step-card">
             <div class="step-number">3</div>
-            <div class="step-icon" style="background: linear-gradient(135deg, #06B6D4 0%, #22D3EE 100%);">
+            <div class="step-icon" style="background: #111827; color: white;">
                 <i class="fas fa-book-reader"></i>
             </div>
             <h3>Start Reading</h3>
@@ -165,7 +161,7 @@
 
 <!-- Call to Action -->
 <div
-    style="text-align: center; padding: 5rem 2rem; margin-top: 5rem; background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); border-radius: 30px; position: relative; overflow: hidden;">
+    style="text-align: center; padding: 5rem 2rem; margin-top: 5rem; background: #111827; border-radius: 30px; position: relative; overflow: hidden;">
     <div
         style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; opacity: 0.5;">
     </div>
@@ -183,7 +179,7 @@
             Join our community of book lovers and unlock access to thousands of books today!
         </p>
         <a href="{{ url_for('register') }}" class="button"
-            style="background: white; color: #6366F1; font-size: 1.3rem; padding: 1.25rem 3rem; font-weight: 700; box-shadow: 0 8px 30px rgba(0,0,0,0.3); border: none;">
+            style="background: white; color: #111827; font-size: 1.3rem; padding: 1.25rem 3rem; font-weight: 700; box-shadow: none; border: none;">
             <i class="fas fa-rocket"></i> Create Free Account Now
         </a>
     </div>
@@ -235,7 +231,7 @@
 </script>
 
 <style>
-    /* Color Palette: Indigo/Purple (Primary), Pink (Secondary), Cyan (Tertiary) */
+    /* Minimalist Styles */
 
     @keyframes float {
 
@@ -250,33 +246,14 @@
     }
 
     .typed-container {
-        background: linear-gradient(90deg, #fff 0%, #e0e7ff 30%, #ede9fe 60%, #fce7f3 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #111827;
         font-size: 1.8rem;
         display: inline-block;
-        animation: gradient-shift 5s ease infinite;
-        background-size: 200% auto;
-        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
-    }
-
-    @keyframes gradient-shift {
-
-        0%,
-        100% {
-            background-position: 0% 50%;
-        }
-
-        50% {
-            background-position: 100% 50%;
-        }
     }
 
     .cursor {
-        color: white;
+        color: #111827;
         animation: blink 0.7s infinite;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         font-weight: 400;
     }
 
@@ -300,6 +277,7 @@
         position: relative;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         transition: all 0.3s ease;
+        border: 1px solid #e5e7eb;
     }
 
     .step-card:hover {
@@ -313,7 +291,7 @@
         right: -15px;
         width: 50px;
         height: 50px;
-        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        background: #111827;
         color: white;
         border-radius: 50%;
         display: flex;
@@ -352,7 +330,7 @@
 
     .book-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 16px 50px rgba(99, 102, 241, 0.2) !important;
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1) !important;
     }
 
     .button {
@@ -361,7 +339,7 @@
 
     .button:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25) !important;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15) !important;
     }
 </style>
 

@@ -4,35 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ktabna - Your library, anytime, anywhere.</title>
+    <title>KiTABI - Your library, anytime, anywhere.</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.1">
 </head>
 
 <body>
     <!-- Professional Navigation Bar with Blur Effect -->
     <header
-        style="background: rgba(255, 255, 255, 0.185); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid rgba(229, 231, 235, 0.6);">
+        style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass-border);">
         <div style="max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
             <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
                 <!-- Logo/Brand -->
                 <a href="/"
                     style="text-decoration: none; display: flex; align-items: center; gap: 1rem; transition: all 0.3s ease;">
                     <div
-                        style="background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%); padding: 0.75rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);">
+                        style="background: var(--gradient-primary); padding: 0.75rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);">
                         <i class="fas fa-book-open" style="font-size: 1.5rem; color: white;"></i>
                     </div>
                     <div>
                         <span
-                            style="color: #1F2937; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; display: block;">Ktabna</span>
+                            style="color: var(--text-main); font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; display: block;">KiTABI</span>
                         <span
-                            style="color: #6B7280; font-size: 0.75rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;"> Your Library</span>
+                            style="color: var(--text-muted); font-size: 0.75rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
+                            Your Library</span>
                     </div>
                 </a>
 
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn"
+                    style="display: none; background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer;">
+                    <i class="fas fa-bars"></i>
+                </button>
+
                 <!-- Navigation Links -->
-                <ul style="display: flex; gap: 0.5rem; list-style: none; align-items: center; margin: 0; padding: 0;">
+                <ul id="nav-links"
+                    style="display: flex; gap: 0.5rem; list-style: none; align-items: center; margin: 0; padding: 0;">
                     <li><a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
 
                     {% if g.user %}
@@ -58,8 +66,8 @@
                     <li style="margin-left: 1rem; padding-left: 1rem; border-left: 2px solid #E5E7EB;">
                         <div
                             style="display: flex; align-items: center; gap: 0.5rem; background: #F3F4F6; padding: 0.6rem 1.2rem; border-radius: 10px; border: 1px solid #E5E7EB;">
-                            <i class="fas fa-user-circle" style="font-size: 1.2rem; color: #4F46E5;"></i>
-                            <span style="color: #1F2937; font-weight: 600;">{{ g.user['username'] }}</span>
+                            <i class="fas fa-user-circle" style="font-size: 1.2rem; color: var(--primary-color);"></i>
+                            <span style="color: var(--text-main); font-weight: 600;">{{ g.user['username'] }}</span>
                         </div>
                     </li>
                     <li>
@@ -77,7 +85,7 @@
                     </li>
                     <li>
                         <a href="{{ url_for('register') }}" class="nav-link"
-                            style="background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%); color: white;">
+                            style="background: var(--gradient-primary); color: white;">
                             <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
@@ -113,19 +121,20 @@
         <!-- Page Content -->
         {% block content %}
         <div style="max-width: 1200px; margin: 3rem auto; padding: 0 2rem; text-align: center;">
-            <h1 style="color: #1F2937; font-size: 3rem; margin-bottom: 1rem;">
-                <i class="fas fa-book-open" style="color: #4F46E5;"></i> Welcome to Ktabna
+            <h1 style="color: var(--text-main); font-size: 3rem; margin-bottom: 1rem;">
+                <i class="fas fa-book-open" style="color: var(--primary-color);"></i> Welcome to Ktabna
             </h1>
-            <p style="color: #6B7280; font-size: 1.2rem;">Your gateway to endless knowledge</p>
+            <p style="color: var(--text-muted); font-size: 1.2rem;">Your gateway to endless knowledge</p>
         </div>
         {% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer style="background: #1F2937; border-top: 2px solid #374151; margin-top: 4rem;">
+    <footer style="background: var(--text-main); border-top: 2px solid #374151; margin-top: 4rem;">
         <div style="max-width: 1200px; margin: 0 auto; padding: 2rem; text-align: center;">
             <p style="color: #9CA3AF; margin-bottom: 0.5rem;">
-                <i class="fas fa-book-open" style="color: #4F46E5;"></i> Ktabna - Your library, anytime, anywhere.
+                <i class="fas fa-book-open" style="color: var(--primary-color);"></i> KiTABI - Your library, anytime,
+                anywhere.
                 System
             </p>
             <p style="color: #6B7280; font-size: 0.9rem;">
@@ -134,10 +143,23 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const navLinks = document.getElementById('nav-links');
+
+            if (menuBtn && navLinks) {
+                menuBtn.addEventListener('click', function () {
+                    navLinks.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+
     <style>
         /* Navigation Link Styles */
         .nav-link {
-            color: #1F2937;
+            color: var(--text-main);
             text-decoration: none;
             padding: 0.7rem 1.3rem;
             border-radius: 10px;
@@ -150,10 +172,10 @@
         }
 
         .nav-link:hover {
-            background: #4F46E5;
+            background: var(--primary-color);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 44px 12px rgba(79, 70, 229, 0.3);
         }
 
         .nav-link i {
@@ -167,7 +189,7 @@
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             font-weight: 500;
         }
 

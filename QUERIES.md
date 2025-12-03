@@ -59,8 +59,8 @@ This document contains all MongoDB queries used in the Library Management System
 ### Create User (with Empty Loans Array)
 ```javascript
 db.users.insertOne({
-  username: "john_doe",
-  email: "john@example.com",
+  username: "Andro",
+  email: "Andro@example.com",
   password: "hashed_password_here",
   role: "user",
   created_at: new Date(),
@@ -70,12 +70,12 @@ db.users.insertOne({
 
 ### Find User by Email
 ```javascript
-db.users.findOne({ email: "john@example.com" })
+db.users.findOne({ email: "Ali@example.com" })
 ```
 
 ### Find User by Username
 ```javascript
-db.users.findOne({ username: "john_doe" })
+db.users.findOne({ username: "Farah" })
 ```
 
 ### Update User
