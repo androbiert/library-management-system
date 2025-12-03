@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ktabna - Library Management System Presentation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Fira+Code:wght@400;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-buttons">
+        <button class="nav-btn nav-prev" id="prevBtn" aria-label="Previous slide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+        </button>
+        <button class="nav-btn nav-next" id="nextBtn" aria-label="Next slide">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter" id="slideCounter">1 / 9</div>
+
+    <!-- Slides Container -->
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- Slide 1: Hero -->
+        <section class="slide active" data-slide="1">
+            <div class="slide-content hero-slide">
+                <div class="hero-icon">📚</div>
+                <h1 class="hero-title">
+                    <span class="gradient-text">KTABNA</span>
+                </h1>
+                <h2 class="hero-subtitle">Système de Gestion de Bibliothèque</h2>
+                <p class="hero-description">Une solution moderne basée sur MongoDB & Flask</p>
+                <div class="hero-badges">
+                    <span class="badge">NoSQL</span>
+                    <span class="badge">MongoDB</span>
+                    <span class="badge">Flask</span>
+                    <span class="badge">Python</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Overview -->
+        <section class="slide" data-slide="2">
+            <div class="slide-content">
+                <h2 class="slide-title">📖 Présentation du Projet</h2>
+                <div class="two-column">
+                    <div class="column">
+                        <h3>🎯 Objectifs</h3>
+                        <ul class="feature-list">
+                            <li>Gestion centralisée des livres</li>
+                            <li>Suivi en temps réel des emprunts</li>
+                            <li>Tableau de bord analytique</li>
+                            <li>Interface utilisateur intuitive</li>
+                            <li>Système de badges gamification</li>
+                        </ul>
+                    </div>
+                    <div class="column">
+                        <h3>🛠️ Stack Technique</h3>
+                        <div class="tech-stack">
+                            <div class="tech-item">
+                                <span class="tech-label">Backend</span>
+                                <span class="tech-value">Flask (Python)</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-label">Database</span>
+                                <span class="tech-value">MongoDB (NoSQL)</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-label">ODM</span>
+                                <span class="tech-value">PyMongo</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-label">Frontend</span>
+                                <span class="tech-value">HTML/CSS/JS</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-label">Charts</span>
+                                <span class="tech-value">Chart.js</span>
+                            </div>
+                            <div class="tech-item">
+                                <span class="tech-label">i18n</span>
+                                <span class="tech-value">Flask-Babel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: NoSQL Justification -->
+        <section class="slide" data-slide="3">
+            <div class="slide-content">
+                <h2 class="slide-title">🗄️ Pourquoi NoSQL (MongoDB) ?</h2>
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">🔄</div>
+                        <h3>Flexibilité du Schéma</h3>
+                        <p>Ajout de champs sans migration complexe. Évolution naturelle du modèle de données.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📦</div>
+                        <h3>Documents Embarqués</h3>
+                        <p>Historique des emprunts intégré. Pas de JOIN coûteux, une seule requête.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">⚡</div>
+                        <h3>Performance Optimale</h3>
+                        <p>Application read-heavy. Lecture rapide avec embedded documents.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h3>Agrégations Puissantes</h3>
+                        <p>Pipeline d'agrégation MongoDB pour analyses complexes et statistiques.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📈</div>
+                        <h3>Scalabilité Horizontale</h3>
+                        <p>Sharding automatique pour croissance future de la bibliothèque.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">💾</div>
+                        <h3>Snapshots Immuables</h3>
+                        <p>Conservation de l'historique même après modification/suppression des livres.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Collections Schema -->
+        <section class="slide" data-slide="4">
+            <div class="slide-content">
+                <h2 class="slide-title">📝 Schéma des Collections MongoDB</h2>
+                <div class="two-column">
+                    <div class="column">
+                        <h3>Collection: <code>books</code></h3>
+                        <div class="code-block">
+                            <pre><code>{
+  "_id": ObjectId("..."),
+  "title": "1984",
+  "author": "George Orwell",
+  "category": "Classic",
+  "description": "...",
+  "cover_image": "url",
+  "total_copies": 5,
+  "available_copies": 3,
+  "added_at": ISODate(),
+  "current_loans": [
+    {
+      "loan_id": ObjectId(),
+      "user_id": ObjectId(),
+      "user_name": "Andro",
+      "borrow_date": ISODate(),
+      "deadline": ISODate(),
+      "status": "Borrowed"
+    }
+  ],
+  "loan_history": [...]
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <h3>Collection: <code>users</code></h3>
+                        <div class="code-block">
+                            <pre><code>{
+  "_id": ObjectId("..."),
+  "username": "Andro",
+  "email": "andro@lib.com",
+  "password": "$2b$12...",
+  "role": "user",
+  "created_at": ISODate(),
+  "books_read": 15,
+  "categories_explored": [...],
+  "badges": [
+    "Welcome",
+    "First Reader",
+    "Bookworm"
+  ],
+  "loans": [
+    {
+      "loan_id": ObjectId(),
+      "book_snapshot": {
+        "title": "1984",
+        "author": "George Orwell"
+      },
+      "borrow_date": ISODate(),
+      "status": "Returned"
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Database Operations -->
+        <section class="slide" data-slide="5">
+            <div class="slide-content">
+                <h2 class="slide-title">🔹 Opérations CRUD - Exemples</h2>
+                <div class="operations-grid">
+                    <div class="operation-card">
+                        <h3>CREATE - Ajouter un Livre</h3>
+                        <div class="code-block small">
+                            <pre><code class="language-python">def add_book(title, author, category):
+    db = get_db()
+    book = {
+        "title": title,
+        "author": author,
+        "category": category,
+        "total_copies": 5,
+        "available_copies": 5,
+        "added_at": datetime.utcnow(),
+        "current_loans": [],
+        "loan_history": []
+    }
+    result = db.books.insert_one(book)
+    return result.inserted_id</code></pre>
+                        </div>
+                    </div>
+                    <div class="operation-card">
+                        <h3>READ - Recherche de Livres</h3>
+                        <div class="code-block small">
+                            <pre><code class="language-python">def search_books(query):
+    db = get_db()
+    books = db.books.find({
+        "$or": [
+            {"title": {"$regex": query, 
+                      "$options": "i"}},
+            {"author": {"$regex": query,
+                       "$options": "i"}},
+            {"category": {"$regex": query,
+                         "$options": "i"}}
+        ]
+    })
+    return list(books)</code></pre>
+                        </div>
+                    </div>
+                    <div class="operation-card">
+                        <h3>UPDATE - Créer un Emprunt</h3>
+                        <div class="code-block small">
+                            <pre><code class="language-python">def create_loan(user_id, book_id):
+    db = get_db()
+    # Update user: add to loans array
+    db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {
+            "$push": {"loans": {...}},
+            "$inc": {"books_read": 1}
+        }
+    )
+    # Update book: decrease available
+    db.books.update_one(
+        {"_id": ObjectId(book_id)},
+        {"$inc": {"available_copies": -1}}
+    )</code></pre>
+                        </div>
+                    </div>
+                    <div class="operation-card">
+                        <h3>AGGREGATE - Statistiques</h3>
+                        <div class="code-block small">
+                            <pre><code class="language-python">def get_loans_by_category():
+    db = get_db()
+    pipeline = [
+        {"$unwind": "$loans"},
+        {
+            "$group": {
+                "_id": "$loans.book_snapshot.category",
+                "count": {"$sum": 1}
+            }
+        },
+        {"$sort": {"count": -1}}
+    ]
+    return list(db.users.aggregate(pipeline))</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Architecture -->
+        <section class="slide" data-slide="6">
+            <div class="slide-content">
+                <h2 class="slide-title">🖥️ Architecture de l'Application</h2>
+                <div class="architecture-diagram">
+                    <div class="arch-layer">
+                        <div class="arch-box frontend">
+                            <h3>Frontend</h3>
+                            <p>HTML5 • CSS3 • JavaScript</p>
+                            <p>Chart.js • Responsive Design</p>
+                        </div>
+                    </div>
+                    <div class="arch-arrow">↓ HTTP Requests</div>
+                    <div class="arch-layer">
+                        <div class="arch-box backend">
+                            <h3>Flask Backend</h3>
+                            <p>Routing • Authentication</p>
+                            <p>Business Logic • Session Management</p>
+                        </div>
+                    </div>
+                    <div class="arch-arrow">↓ Function Calls</div>
+                    <div class="arch-layer">
+                        <div class="arch-box data">
+                            <h3>Data Layer (utils/queries.py)</h3>
+                            <p>CRUD Operations • Aggregations</p>
+                            <p>Business Rules • Validation</p>
+                        </div>
+                    </div>
+                    <div class="arch-arrow">↓ PyMongo Queries</div>
+                    <div class="arch-layer">
+                        <div class="arch-box database">
+                            <h3>MongoDB Database</h3>
+                            <p>Collections: users, books</p>
+                            <p>Embedded Documents • Indexes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Features -->
+        <section class="slide" data-slide="7">
+            <div class="slide-content">
+                <h2 class="slide-title">⚙️ Fonctionnalités Principales</h2>
+                <div class="two-column">
+                    <div class="column">
+                        <div class="feature-box admin">
+                            <h3>👨‍💼 Pour les Administrateurs</h3>
+                            <ul class="feature-list">
+                                <li><strong>Tableau de bord analytique</strong>
+                                    <ul>
+                                        <li>Graphiques Chart.js interactifs</li>
+                                        <li>Statistiques en temps réel</li>
+                                        <li>Emprunts par catégorie</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Gestion des livres (CRUD)</strong>
+                                    <ul>
+                                        <li>Ajout/Modification/Suppression</li>
+                                        <li>Gestion des stocks et copies</li>
+                                        <li>Upload d'images de couverture</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Gestion des utilisateurs</strong>
+                                    <ul>
+                                        <li>Création de comptes</li>
+                                        <li>Attribution de rôles</li>
+                                        <li>Historique complet</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Gestion des emprunts</strong>
+                                    <ul>
+                                        <li>Attribution manuelle</li>
+                                        <li>Suivi des retards</li>
+                                        <li>Traitement des retours</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="feature-box user">
+                            <h3>👤 Pour les Utilisateurs</h3>
+                            <ul class="feature-list">
+                                <li><strong>Catalogue interactif</strong>
+                                    <ul>
+                                        <li>Recherche en temps réel</li>
+                                        <li>Filtrage par catégorie</li>
+                                        <li>Affichage des disponibilités</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Gestion des emprunts</strong>
+                                    <ul>
+                                        <li>Emprunt en un clic</li>
+                                        <li>Historique personnel</li>
+                                        <li>Retour de livre</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Système de badges 🏆</strong>
+                                    <ul>
+                                        <li>🎉 Welcome - Premier login</li>
+                                        <li>📖 First Reader - 1er livre</li>
+                                        <li>🐛 Bookworm - 5+ livres</li>
+                                        <li>📚 Avid Reader - 10+ livres</li>
+                                        <li>🏆 Book Master - 20+ livres</li>
+                                        <li>🌍 Explorer - 10+ catégories</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Internationalisation</strong>
+                                    <ul>
+                                        <li>Support Anglais/Arabe</li>
+                                        <li>Layout RTL pour l'arabe</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Statistics -->
+        <section class="slide" data-slide="8">
+            <div class="slide-content">
+                <h2 class="slide-title">📊 Statistiques & Analytics</h2>
+                <div class="stats-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-value" data-count="250">0</div>
+                        <div class="stat-label">Livres dans la collection</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" data-count="48">0</div>
+                        <div class="stat-label">Utilisateurs actifs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📖</div>
+                        <div class="stat-value" data-count="132">0</div>
+                        <div class="stat-label">Emprunts actifs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏷️</div>
+                        <div class="stat-value" data-count="12">0</div>
+                        <div class="stat-label">Catégories</div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Emprunts par Catégorie</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Évolution Mensuelle</h3>
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Conclusion -->
+        <section class="slide" data-slide="9">
+            <div class="slide-content hero-slide">
+                <h2 class="slide-title conclusion-title">✨ Merci !</h2>
+                <div class="conclusion-content">
+                    <div class="conclusion-summary">
+                        <h3>Points Clés du Projet</h3>
+                        <div class="key-points">
+                            <div class="key-point">
+                                <span class="point-icon">✓</span>
+                                <span>Architecture NoSQL moderne avec MongoDB</span>
+                            </div>
+                            <div class="key-point">
+                                <span class="point-icon">✓</span>
+                                <span>Documents embarqués pour performance optimale</span>
+                            </div>
+                            <div class="key-point">
+                                <span class="point-icon">✓</span>
+                                <span>Interface utilisateur intuitive et responsive</span>
+                            </div>
+                            <div class="key-point">
+                                <span class="point-icon">✓</span>
+                                <span>Analytics en temps réel avec Chart.js</span>
+                            </div>
+                            <div class="key-point">
+                                <span class="point-icon">✓</span>
+                                <span>Gamification avec système de badges</span>
+                            </div>
+                            <div class="key-point">
+                                <span class="point-icon">✓</span>
+                                <span>Support multilingue (EN/AR)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tech-summary">
+                        <!-- Slide 9: Conclusion -->
+                        <section class="slide" data-slide="9">
+                            <div class="slide-content hero-slide">
+                                <h2 class="slide-title conclusion-title">✨ Merci !</h2>
+                                <div class="conclusion-content">
+                                    <div class="conclusion-summary">
+                                        <h3>Points Clés du Projet</h3>
+                                        <div class="key-points">
+                                            <div class="key-point">
+                                                <span class="point-icon">✓</span>
+                                                <span>Architecture NoSQL moderne avec MongoDB</span>
+                                            </div>
+                                            <div class="key-point">
+                                                <span class="point-icon">✓</span>
+                                                <span>Documents embarqués pour performance optimale</span>
+                                            </div>
+                                            <div class="key-point">
+                                                <span class="point-icon">✓</span>
+                                                <span>Interface utilisateur intuitive et responsive</span>
+                                            </div>
+                                            <div class="key-point">
+                                                <span class="point-icon">✓</span>
+                                                <span>Analytics en temps réel avec Chart.js</span>
+                                            </div>
+                                            <div class="key-point">
+                                                <span class="point-icon">✓</span>
+                                                <span>Gamification avec système de badges</span>
+                                            </div>
+                                            <div class="key-point">
+                                                <span class="point-icon">✓</span>
+                                                <span>Support multilingue (EN/AR)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tech-summary">
+                                        <p class="gradient-text tech-highlight">Flask + MongoDB + PyMongo</p>
+                                        <p class="subtitle-text">Une solution complète pour la gestion moderne de
+                                            bibliothèques</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 10: SQL vs NoSQL Schema Comparison -->
+                        <section class="slide" data-slide="10">
+                            <div class="slide-content">
+                                <h2 class="slide-title">🔄 Comparaison Schémas - SQL vs NoSQL</h2>
+                                <div class="schema-comparison">
+                                    <div class="schema-box sql-schema">
+                                        <h3>❌ SQL - 7 Tables (Normalisé 3NF)</h3>
+                                        <ul class="schema-list">
+                                            <li><code>USERS</code> - Informations utilisateurs</li>
+                                            <li><code>BOOKS</code> - Métadonnées livres</li>
+                                            <li><code>CATEGORIES</code> - Catégories de livres</li>
+                                            <li><code>LOANS</code> - Table de jointure emprunts</li>
+                                            <li><code>BADGES</code> - Badges disponibles</li>
+                                            <li><code>USER_BADGES</code> - Table de jointure badges</li>
+                                            <li><code>USER_CATEGORIES_EXPLORED</code> - Table de jointure catégories
+                                            </li>
+                                        </ul>
+                                        <div class="schema-stats">
+                                            <div class="stat-badge danger">7 Tables</div>
+                                            <div class="stat-badge danger">Multiples JOINs</div>
+                                            <div class="stat-badge danger">Foreign Keys</div>
+                                        </div>
+                                    </div>
+                                    <div class="schema-box nosql-schema">
+                                        <h3>✅ NoSQL - 2 Collections (Dénormalisé)</h3>
+                                        <ul class="schema-list">
+                                            <li><code>users</code> - Utilisateurs + loans embarqués + badges</li>
+                                            <li><code>books</code> - Livres + current_loans + history</li>
+                                        </ul>
+                                        <div class="schema-highlight">
+                                            <p>📦 <strong>Documents embarqués</strong> : Historique complet sans JOIN
+                                            </p>
+                                            <p>💾 <strong>Snapshots</strong> : book_snapshot conservé dans loans</p>
+                                            <p>⚡ <strong>1 requête</strong> : Toutes les données d'un utilisateur</p>
+                                        </div>
+                                        <div class="schema-stats">
+                                            <div class="stat-badge success">2 Collections</div>
+                                            <div class="stat-badge success">Pas de JOINs</div>
+                                            <div class="stat-badge success">Embedded Docs</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 11: Query Comparison SQL vs NoSQL -->
+                        <section class="slide" data-slide="11">
+                            <div class="slide-content">
+                                <h2 class="slide-title">⚔️ Comparaison Requêtes - SQL vs NoSQL</h2>
+                                <h3 style="text-align: center; margin-bottom: 30px;">Cas d'usage : Obtenir l'historique
+                                    d'un utilisateur</h3>
+                                <div class="code-comparison">
+                                    <div class="comparison-side">
+                                        <div class="code-comparison-header sql-header">❌ SQL - 3 JOINS Complexes</div>
+                                        <div class="code-block">
+                                            <pre><code class="language-sql">SELECT 
+    u.username,
+    u.email,
+    l.borrow_date,
+    l.deadline,
+    l.status,
+    b.title,
+    b.author,
+    c.name as category
+FROM users u
+LEFT JOIN loans l 
+    ON u.id = l.user_id
+LEFT JOIN books b 
+    ON l.book_id = b.id
+LEFT JOIN categories c 
+    ON b.category_id = c.id
+WHERE u.id = ?
+ORDER BY l.borrow_date DESC;</code></pre>
+                                        </div>
+                                        <div class="comparison-problems">
+                                            <p>❌ <strong>3 JOINs</strong> = Opération coûteuse</p>
+                                            <p>❌ <strong>Données perdues</strong> si livre supprimé</p>
+                                            <p>❌ <strong>Performance</strong> dégradée avec volume</p>
+                                        </div>
+                                    </div>
+                                    <div class="comparison-side">
+                                        <div class="code-comparison-header nosql-header">✅ MongoDB - 1 Requête Simple
+                                        </div>
+                                        <div class="code-block">
+                                            <pre><code class="language-javascript">// UNE SEULE requête!
+db.users.findOne({ 
+    _id: ObjectId("user_id") 
+})
+
+// Résultat immédiat avec TOUT:
+{
+  "username": "Andro",
+  "email": "andro@lib.com",
+  "loans": [
+    {
+      "book_snapshot": {
+        "title": "1984",
+        "author": "Orwell"
+      },
+      "borrow_date": "2024-01-15",
+      "status": "Returned"
+    }
+    // ... tous les autres emprunts
+  ]
+}</code></pre>
+                                        </div>
+                                        <div class="comparison-benefits">
+                                            <p>✅ <strong>1 requête</strong> au lieu de 3 JOINs</p>
+                                            <p>✅ <strong>Snapshots conservés</strong> même si livre supprimé</p>
+                                            <p>✅ <strong>Performance optimale</strong> - pas de joins</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 12: Detailed Comparison Table -->
+                        <section class="slide" data-slide="12">
+                            <div class="slide-content">
+                                <h2 class="slide-title">📊 Tableau Comparatif Détaillé</h2>
+                                <div class="comparison-table-container">
+                                    <table class="comparison-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Aspect</th>
+                                                <th>SQL (Relationnel)</th>
+                                                <th>NoSQL (MongoDB)</th>
+                                                <th>Gagnant</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Tables/Collections</strong></td>
+                                                <td>7 tables</td>
+                                                <td>2 collections</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Historique utilisateur</strong></td>
+                                                <td>3 JOINs</td>
+                                                <td>1 requête simple</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Emprunter un livre</strong></td>
+                                                <td>6 requêtes + transaction</td>
+                                                <td>2 requêtes atomiques</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Performance lecture</strong></td>
+                                                <td>Moyenne (joins)</td>
+                                                <td>Excellente (embedded)</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Intégrité référentielle</strong></td>
+                                                <td>Foreign Keys strict</td>
+                                                <td>Application-level</td>
+                                                <td class="winner sql-winner">✅ SQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Flexibilité schéma</strong></td>
+                                                <td>Rigide (migrations)</td>
+                                                <td>Flexible (schema-less)</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Données historiques</strong></td>
+                                                <td>Perdues si livre supprimé</td>
+                                                <td>Snapshots conservés</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Scalabilité</strong></td>
+                                                <td>Verticale (difficile)</td>
+                                                <td>Horizontale (sharding)</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Complexité code</strong></td>
+                                                <td>Complexe (joins)</td>
+                                                <td>Simple (embedded)</td>
+                                                <td class="winner">✅ NoSQL</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Transactions ACID</strong></td>
+                                                <td>Complet multi-tables</td>
+                                                <td>Par document</td>
+                                                <td class="winner sql-winner">✅ SQL</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="comparison-summary">
+                                        <div class="summary-card nosql-wins">
+                                            <h3>🏆 NoSQL Gagne: 8/10</h3>
+                                            <p>Optimal pour notre cas d'usage bibliothèque</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 13: MongoDB Operators Reference -->
+                        <section class="slide" data-slide="13">
+                            <div class="slide-content">
+                                <h2 class="slide-title">🔧 Opérateurs MongoDB Utilisés</h2>
+                                <div class="operators-grid">
+                                    <div class="operator-card">
+                                        <div class="operator-icon">➕</div>
+                                        <h3><code>$push</code></h3>
+                                        <p>Ajouter un élément à un array</p>
+                                        <div class="operator-example">
+                                            <pre><code>$push: { 
+  loans: {...} 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">➖</div>
+                                        <h3><code>$pull</code></h3>
+                                        <p>Retirer un élément d'un array</p>
+                                        <div class="operator-example">
+                                            <pre><code>$pull: { 
+  current_loans: {...} 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">🔢</div>
+                                        <h3><code>$inc</code></h3>
+                                        <p>Incrémenter/Décrémenter</p>
+                                        <div class="operator-example">
+                                            <pre><code>$inc: { 
+  books_read: 1,
+  available_copies: -1 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">✏️</div>
+                                        <h3><code>$set</code></h3>
+                                        <p>Modifier un champ</p>
+                                        <div class="operator-example">
+                                            <pre><code>$set: { 
+  "loans.$.status": "Late"
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">🔍</div>
+                                        <h3><code>$regex</code></h3>
+                                        <p>Recherche textuelle</p>
+                                        <div class="operator-example">
+                                            <pre><code>title: { 
+  $regex: "query",
+  $options: "i" 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">📂</div>
+                                        <h3><code>$unwind</code></h3>
+                                        <p>Dérouler un array</p>
+                                        <div class="operator-example">
+                                            <pre><code>{ 
+  $unwind: "$loans" 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">📊</div>
+                                        <h3><code>$group</code></h3>
+                                        <p>Agréger des données</p>
+                                        <div class="operator-example">
+                                            <pre><code>$group: { 
+  _id: "$category",
+  count: { $sum: 1 } 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                    <div class="operator-card">
+                                        <div class="operator-icon">🎯</div>
+                                        <h3><code>$elemMatch</code></h3>
+                                        <p>Chercher dans array</p>
+                                        <div class="operator-example">
+                                            <pre><code>loans: { 
+  $elemMatch: {
+    status: "Borrowed"
+  } 
+}</code></pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 14: Benefits & Limitations -->
+                        <section class="slide" data-slide="14">
+                            <div class="slide-content">
+                                <h2 class="slide-title">⚖️ Avantages & Limitations NoSQL</h2>
+                                <div class="benefits-limitations">
+                                    <div class="benefits-box">
+                                        <h3>✅ Avantages Majeurs</h3>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">🚀</div>
+                                            <div class="benefit-content">
+                                                <h4>Performance de Lecture</h4>
+                                                <ul>
+                                                    <li>Historique complet en 1 requête</li>
+                                                    <li>Pas de joins coûteux</li>
+                                                    <li>Données localisées ensemble</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">📸</div>
+                                            <div class="benefit-content">
+                                                <h4>Snapshots Immuables</h4>
+                                                <ul>
+                                                    <li>Historique conserve infos originales</li>
+                                                    <li>Livre modifié/supprimé = historique intact</li>
+                                                    <li>Audit trail complet</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">💡</div>
+                                            <div class="benefit-content">
+                                                <h4>Simplicité du Code</h4>
+                                                <ul>
+                                                    <li>Moins de requêtes à gérer</li>
+                                                    <li>Pas de transactions complexes</li>
+                                                    <li>Modèle orienté objet naturel</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">🔧</div>
+                                            <div class="benefit-content">
+                                                <h4>Flexibilité</h4>
+                                                <ul>
+                                                    <li>Ajout facile de nouveaux champs</li>
+                                                    <li>Pas besoin de migrations</li>
+                                                    <li>Évolution rapide</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <div class="benefit-icon">📈</div>
+                                            <div class="benefit-content">
+                                                <h4>Scalabilité</h4>
+                                                <ul>
+                                                    <li>Sharding horizontal automatique</li>
+                                                    <li>Distribution géographique facile</li>
+                                                    <li>Pas de limite d'utilisateurs</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="limitations-box">
+                                        <h3>⚠️ Limitations à Considérer</h3>
+                                        <div class="limitation-item">
+                                            <div class="limitation-icon">💾</div>
+                                            <div class="limitation-content">
+                                                <h4>Duplication de Données</h4>
+                                                <ul>
+                                                    <li>Snapshots dupliquent infos livres</li>
+                                                    <li>Taille documents peut augmenter</li>
+                                                    <li>Stockage plus important</li>
+                                                </ul>
+                                                <p class="mitigation">✓ Acceptable pour historique complet</p>
+                                            </div>
+                                        </div>
+                                        <div class="limitation-item">
+                                            <div class="limitation-icon">⏱️</div>
+                                            <div class="limitation-content">
+                                                <h4>Cohérence Éventuelle</h4>
+                                                <ul>
+                                                    <li>Pas de garantie ACID multi-documents</li>
+                                                    <li>Cohérence au niveau applicatif</li>
+                                                    <li>Risque incohérence si update échoue</li>
+                                                </ul>
+                                                <p class="mitigation">✓ OK pour notre cas (simple 1-to-many)</p>
+                                            </div>
+                                        </div>
+                                        <div class="limitation-item">
+                                            <div class="limitation-icon">📏</div>
+                                            <div class="limitation-content">
+                                                <h4>Limite de Taille</h4>
+                                                <ul>
+                                                    <li>Documents limités à 16MB</li>
+                                                    <li>Problème si 1000+ emprunts</li>
+                                                    <li>Solution: archivage périodique</li>
+                                                </ul>
+                                                <p class="mitigation">✓ Improbable pour bibliothèque</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Slide 15: Deployment & Future -->
+                        <section class="slide" data-slide="15">
+                            <div class="slide-content">
+                                <h2 class="slide-title">🚀 Déploiement & Technologies</h2>
+                                <div class="deployment-content">
+                                    <div class="deployment-section">
+                                        <h3>☁️ Cloud Deployment</h3>
+                                        <div class="deployment-cards">
+                                            <div class="deploy-card">
+                                                <h4>Backend - Render</h4>
+                                                <ul>
+                                                    <li>Deploy automatique depuis Git</li>
+                                                    <li>HTTPS gratuit</li>
+                                                    <li>Auto-scaling</li>
+                                                </ul>
+                                            </div>
+                                            <div class="deploy-card">
+                                                <h4>Database - MongoDB Atlas</h4>
+                                                <ul>
+                                                    <li>Cluster cloud gratuit</li>
+                                                    <li>Backups automatiques</li>
+                                                    <li>Monitoring intégré</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="deployment-section">
+                                        <h3>🌍 Internationalisation (i18n)</h3>
+                                        <div class="i18n-features">
+                                            <div class="i18n-card">
+                                                <div class="lang-flag">🇬🇧</div>
+                                                <p><strong>Anglais</strong> - Interface par défaut</p>
+                                            </div>
+                                            <div class="i18n-card">
+                                                <div class="lang-flag">🇸🇦</div>
+                                                <p><strong>Arabe</strong> - Layout RTL complet</p>
+                                            </div>
+                                            <p class="i18n-tech"><code>Flask-Babel</code> pour gestion multilingue</p>
+                                        </div>
+                                    </div>
+                                    <div class="deployment-section">
+                                        <h3>🔮 Fonctionnalités Futures</h3>
+                                        <div class="future-grid">
+                                            <div class="future-item">
+                                                <span class="future-icon">🤖</span>
+                                                <span>Recommandations IA basées sur l'historique</span>
+                                            </div>
+                                            <div class="future-item">
+                                                <span class="future-icon">⭐</span>
+                                                <span>Notes et commentaires sur les livres</span>
+                                            </div>
+                                            <div class="future-item">
+                                                <span class="future-icon">📋</span>
+                                                <span>Wishlist personnalisée</span>
+                                            </div>
+                                            <div class="future-item">
+                                                <span class="future-icon">📧</span>
+                                                <span>Notifications email automatiques</span>
+                                            </div>
+                                            <div class="future-item">
+                                                <span class="future-icon">📱</span>
+                                                <span>Application mobile native</span>
+                                            </div>
+                                            <div class="future-item">
+                                                <span class="future-icon">🔔</span>
+                                                <span>Système de réservation</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="final-summary">
+                                        <h3 class="gradient-text" style="font-size: 32px; margin-top: 40px;">MongoDB +
+                                            Flask = Solution Parfaite 🎉</h3>
+                                        <p style="font-size: 18px; color: var(--text-muted); margin-top: 15px;">
+                                            Performance ⭐⭐⭐⭐⭐ | Flexibilité ⭐⭐⭐⭐⭐ | Scalabilité ⭐⭐⭐⭐⭐
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <script src="script.js"></script>
+</body>
+
+</html>
