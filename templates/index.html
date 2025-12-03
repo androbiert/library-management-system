@@ -10,13 +10,14 @@
     </div>
 
     <div style="position: relative; z-index: 1;">
-        <div style="font-size: 6rem; margin-bottom: 1.5rem; color: #111827; animation: float 3s ease-in-out infinite;">
-            <i class="fas fa-book-open"></i>
+        <div style="font-size: 6rem; margin-bottom: 1.5rem; color: #111827; ">
+            <img src="{{ url_for('static', filename='book.gif') }}" alt="Book Animation"
+                style="width: 250px; height: auto;">
         </div>
 
         <h1 style="font-size: 4rem; margin-bottom: 1rem; color: #111827; font-weight: 900; letter-spacing: -1px;">
-            KiTABI
-            
+            KiTABi
+
         </h1>
 
         <p
@@ -42,16 +43,19 @@
 
 <!-- Quick Stats -->
 <div class="stats-grid" style="margin-bottom: 4rem;">
-    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
+    <div class="stat-card"
+        style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
         <span class="stat-number" style="color: #ffffff;">{{ total_books }}</span>
         <span class="stat-label" style="color: #ffffff;"><i class="fas fa-book"></i> Books
             Available</span>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
+    <div class="stat-card"
+        style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
         <span class="stat-number" style="color: #ffffff;">{{ total_categories }}</span>
         <span class="stat-label" style="color: #ffffff;"><i class="fas fa-tags"></i> Categories</span>
     </div>
-    <div class="stat-card" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
+    <div class="stat-card"
+        style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: #111827; border: 1px solid #e5e7eb;">
         <span class="stat-number" style="color: #ffffff;">{{ active_members }}</span>
         <span class="stat-label" style="color: #ffffff;"><i class="fas fa-users"></i> Active
             Members</span>
