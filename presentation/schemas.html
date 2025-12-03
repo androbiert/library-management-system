@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schémas de Base de Données - Ktabna</title>
+    <title>Schémas de Base de Données - KiTABi</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -12,7 +12,7 @@
     <!-- Navigation Sidebar -->
     <nav class="nav-sidebar">
         <div class="nav-logo">
-            📚 Ktabna
+            📚 KiTABi
         </div>
         <ul class="nav-menu">
             <li class="nav-item">
@@ -67,52 +67,15 @@
                 <div class="card">
                     <div class="card-header">Structure Normalisée - 7 Tables</div>
                     <p>Dans une approche SQL traditionnelle, les données sont <strong>normalisées</strong> (3NF) et
-                        réparties sur 7 tables :</p>
+                        réparties sur 7 tables avec relations entre elles :</p>
 
                     <div class="diagram-container">
-                        <div class="schema-box">
-                            <h4>👥 USERS</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, username, email, password_hash, role, created_at, books_read
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>📚 BOOKS</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, title, author, category_id FK, description, cover_image, total_copies,
-                                available_copies
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>📁 CATEGORIES</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, name, description
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>📖 LOANS</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, user_id FK, book_id FK, borrow_date, deadline, return_date, status
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>🏆 BADGES</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, badge_key, name, description, criteria
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>🔗 USER_BADGES</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, user_id FK, badge_id FK, earned_at
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>🔗 USER_CATEGORIES_EXPLORED</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                id, user_id FK, category_id FK, explored_at
-                            </p>
-                        </div>
+                        <img src="sql.png" alt="Schéma SQL - Approche Relationnelle avec 7 tables"
+                            style="max-width: 100%; height: auto; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);">
+                        <p style="margin-top: var(--spacing-sm); color: var(--text-muted); font-size: 0.9rem;">
+                            Diagramme ERD montrant les 7 tables (USERS, BOOKS, CATEGORIES, LOANS, BADGES, USER_BADGES,
+                            USER_CATEGORIES_EXPLORED) avec leurs relations Foreign Keys
+                        </p>
                     </div>
                 </div>
 
@@ -184,26 +147,12 @@
                             collections</strong> et des documents embarqués :</p>
 
                     <div class="diagram-container">
-                        <div class="schema-box">
-                            <h4>👥 Collection: users</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                <strong>Documents embarqués:</strong><br>
-                                • Informations utilisateur<br>
-                                • Badges array<br>
-                                • <strong>Loans array</strong> (avec book snapshots)<br>
-                                • Categories explored array
-                            </p>
-                        </div>
-                        <div class="schema-box">
-                            <h4>📚 Collection: books</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                                <strong>Documents embarqués:</strong><br>
-                                • Informations livre<br>
-                                • <strong>Current loans array</strong><br>
-                                • <strong>Loan history array</strong><br>
-                                • Copies management
-                            </p>
-                        </div>
+                        <img src="nosql.png" alt="Schéma NoSQL - Approche MongoDB avec 2 collections"
+                            style="max-width: 100%; height: auto; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);">
+                        <p style="margin-top: var(--spacing-sm); color: var(--text-muted); font-size: 0.9rem;">
+                            Diagramme montrant les 2 collections MongoDB (users et books) avec leurs documents embarqués
+                            (loans, badges, loan history)
+                        </p>
                     </div>
                 </div>
 
